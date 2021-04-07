@@ -42,7 +42,7 @@ public class OreMixin
     }
 
     @Redirect(method = "func_207803_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/IWorld;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;"))
-    private BlockState test(final IWorld iWorld, final BlockPos pos)
+    private BlockState ongetBlockState(final IWorld iWorld, final BlockPos pos)
     {
         if (isOreBlock)
         {
