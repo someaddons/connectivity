@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.caveore.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "caveore.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "OreMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
