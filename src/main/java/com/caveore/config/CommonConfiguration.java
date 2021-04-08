@@ -14,7 +14,8 @@ public class CommonConfiguration
     protected CommonConfiguration(final ForgeConfigSpec.Builder builder)
     {
         builder.push("Ore settings");
-        builder.comment("List of blocks to which ores are allowed to spawn next to. e.g. format :  [\"minecraft:air\", \"minecraft:cave_air\"]");
+        builder.comment(
+          "List of blocks to which ores are allowed to spawn next to. This does not override existing spawn restrictions of the ores, as those are restrictions on the block they can spawn instead of.  e.g. format :  [\"minecraft:air\", \"minecraft:cave_air\"]");
         caveblocks = builder.defineList("caveblocks",
           Lists.newArrayList("minecraft:air", "minecraft:cave_air", "minecraft:water", "minecraft:lava"),
           e -> e instanceof String && ((String) e).contains(":"));
