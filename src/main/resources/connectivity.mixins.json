@@ -1,0 +1,24 @@
+{
+  "required": false,
+  "package": "com.connectivity.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "connectivity.refmap.json",
+  "mixins": [
+    "ResourceLocationExceptionMixin",
+    "CCustomPayloadLoginPacketMixin",
+    "NettyCompressionDecoderMixin",
+    "NetworkRegistryMixin",
+    "NetworkSystemMixin",
+    "SCustomPayloadLoginPacketMixin",
+    "SCustomPayloadPlayPacketMixin",
+    "ServerLoginNetHandlerMixin",
+    "ServerPlayNetHandlerMixin",
+    "SMultiBlockChangePacketMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

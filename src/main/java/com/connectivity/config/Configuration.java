@@ -1,4 +1,4 @@
-package com.caveore.config;
+package com.connectivity.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
