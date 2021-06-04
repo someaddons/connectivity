@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(targets = "net/minecraft/network/NetworkSystem$1", priority = 101)
+@Mixin(targets = "net/minecraft/network/NetworkSystem$1", priority = 1001)
 /**
  * Set a custom timeout
  */

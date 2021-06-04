@@ -13,7 +13,7 @@ public class ResourceLocationExceptionMixin
     @Inject(method = "<init>(Ljava/lang/String;)V", at = @At("RETURN"))
     private void onException(final String message, final CallbackInfo ci)
     {
-        if (Connectivity.config.getCommonConfig().showFullResourceLocationException.get())
+        if (Connectivity.config != null && Connectivity.config.getCommonConfig().showFullResourceLocationException.get())
         {
             Connectivity.LOGGER.warn("ResourceLocationException!: " + message, this);
         }

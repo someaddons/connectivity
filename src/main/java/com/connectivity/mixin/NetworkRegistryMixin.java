@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static com.connectivity.config.ConfigValues.PERCENT_FORMAT;
 
-@Mixin(value = NetworkRegistry.LoginPayload.class, priority = 101)
+@Mixin(value = NetworkRegistry.LoginPayload.class, priority = 1001)
 
 /**
  * Log warnings about registry packets becoming large

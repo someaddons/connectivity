@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(value = ServerPlayNetHandler.class, priority = 101)
+@Mixin(value = ServerPlayNetHandler.class, priority = 1001)
 /**
  * Sets the timeout constant
  */
