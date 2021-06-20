@@ -8,6 +8,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ResourceLocationException.class)
+/**
+ * Debug mixin to log all resource location stacktraces
+ */
 public class ResourceLocationExceptionMixin
 {
     @Inject(method = "<init>(Ljava/lang/String;)V", at = @At("RETURN"))

@@ -13,7 +13,8 @@
     "SCustomPayloadPlayPacketMixin",
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
-    "SMultiBlockChangePacketMixin"
+    "SMultiBlockChangePacketMixin",
+    "networkstats.NettyPacketEncoderMixin"
   ],
   "client": [
   ],

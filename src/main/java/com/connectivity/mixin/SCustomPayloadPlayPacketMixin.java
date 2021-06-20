@@ -18,12 +18,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SCustomPayloadPlayPacketMixin
 {
     @Shadow
-    private ResourceLocation channel;
+    private ResourceLocation identifier;
 
     @Shadow
     private PacketBuffer data;
 
-    @Inject(method = "readPacketData", at = @At(value = "INVOKE", target = "Ljava/io/IOException;<init>(Ljava/lang/String;)V"), cancellable = true, require = 0, expect = 0)
+    @Inject(method = "read", at = @At(value = "INVOKE", target = "Ljava/io/IOException;<init>(Ljava/lang/String;)V"), cancellable = true, require = 0, expect = 0)
     public void readPacketData(final PacketBuffer buf, final CallbackInfo ci)
     {
         if (Connectivity.config.getCommonConfig().debugPrintMessages.get())
@@ -39,7 +39,7 @@ public class SCustomPayloadPlayPacketMixin
 
     private void reportData(final PacketBuffer data)
     {
-        Connectivity.LOGGER.warn("Too big payload data for: " + channel + " class:" + this.getClass().getSimpleName());
+        Connectivity.LOGGER.warn("Too big payload data for: " + identifier + " class:" + this.getClass().getSimpleName());
         Connectivity.LOGGER.warn("Data:" + data.toString(Charsets.UTF_8));
     }
 }

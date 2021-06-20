@@ -27,18 +27,18 @@ public abstract class SMultiBlockChangePacketMixin
     private BlockState[] states;
 
     @Shadow
-    private boolean field_244308_d;
+    private boolean suppressLightUpdates;
 
     @Overwrite
-    public void writePacketData(PacketBuffer buf) throws IOException
+    public void write(PacketBuffer buf) throws IOException
     {
         buf.writeLong(this.sectionPos.asLong());
-        buf.writeBoolean(this.field_244308_d);
+        buf.writeBoolean(this.suppressLightUpdates);
         buf.writeVarInt(this.positions.length);
 
         for (int i = 0; i < this.positions.length; ++i)
         {
-            buf.writeVarLong(((((long) Block.getStateId(this.states[i])) << 12) | this.positions[i]));
+            buf.writeVarLong(((((long) Block.getId(this.states[i])) << 12) | this.positions[i]));
         }
     }
 }

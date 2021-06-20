@@ -17,16 +17,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class CCustomPayloadLoginPacketMixin
 {
     @Shadow
-    private PacketBuffer payload;
+    private PacketBuffer data;
 
-    @Inject(method = "readPacketData", at = @At(value = "INVOKE", target = "Ljava/io/IOException;<init>(Ljava/lang/String;)V"), cancellable = true, require = 0, expect = 0)
+    @Inject(method = "read", at = @At(value = "INVOKE", target = "Ljava/io/IOException;<init>(Ljava/lang/String;)V"), cancellable = true, require = 0, expect = 0)
     public void readPacketData(final PacketBuffer buf, final CallbackInfo ci)
     {
         if (Connectivity.config.getCommonConfig().disableLoginLimits.get())
         {
             ci.cancel();
             int i = buf.readableBytes();
-            this.payload = new PacketBuffer(buf.readBytes(i));
+            this.data = new PacketBuffer(buf.readBytes(i));
         }
 
         if (Connectivity.config.getCommonConfig().debugPrintMessages.get())
