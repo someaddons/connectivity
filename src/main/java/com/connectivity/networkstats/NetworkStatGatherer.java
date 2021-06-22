@@ -131,7 +131,7 @@ public class NetworkStatGatherer
         calculateThroughput(dataList, timeMinutes);
 
         long totalBytes = 0;
-        long totalRate = 0;
+        double totalRate = 0;
         for (final PacketData entry : dataList)
         {
             totalBytes += entry.totalPacketBytes;

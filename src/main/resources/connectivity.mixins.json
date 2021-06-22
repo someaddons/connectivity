@@ -3,6 +3,7 @@
   "package": "com.connectivity.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "connectivity.refmap.json",
+  "plugin": "com.connectivity.mixin.MixinConfig",
   "mixins": [
     "ResourceLocationExceptionMixin",
     "CCustomPayloadLoginPacketMixin",
@@ -14,7 +15,12 @@
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
     "SMultiBlockChangePacketMixin",
-    "networkstats.NettyPacketEncoderMixin"
+    "networkstats.NettyPacketEncoderMixin",
+    "networkstats.CCustomPayloadLoginPacketNameMixin",
+    "networkstats.CCustomPayloadPacketNameMixin",
+    "networkstats.SCustomPayloadLoginPacketNameMixin",
+    "networkstats.SCustomPayloadPlayPacketNameMixin",
+    "SimpleChannelMixin"
   ],
   "client": [
   ],

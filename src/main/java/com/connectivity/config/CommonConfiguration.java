@@ -12,6 +12,8 @@ public class CommonConfiguration
     public final ForgeConfigSpec.IntValue     packetHistoryMinutes;
     public final ForgeConfigSpec.IntValue     disconnectTimeout;
 
+    public final ForgeConfigSpec ForgeConfigSpecBuilder;
+
     protected CommonConfiguration(final ForgeConfigSpec.Builder builder)
     {
         builder.push("Connectivity settings");
@@ -39,5 +41,6 @@ public class CommonConfiguration
 
         // Escapes the current category level
         builder.pop();
+        ForgeConfigSpecBuilder = builder.build();
     }
 }

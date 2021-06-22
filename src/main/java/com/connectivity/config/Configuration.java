@@ -1,9 +1,12 @@
 package com.connectivity.config;
 
+import com.connectivity.Connectivity;
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.core.io.WritingMode;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraftforge.fml.loading.FMLPaths;
+
+import java.nio.file.Path;
 
 public class Configuration
 {
@@ -22,10 +25,21 @@ public class Configuration
      */
     public Configuration()
     {
-        final Pair<CommonConfiguration, ForgeConfigSpec> com = new ForgeConfigSpec.Builder().configure(CommonConfiguration::new);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, com.getRight());
+        commonConfig = new CommonConfiguration(new ForgeConfigSpec.Builder());
+        loadConfig(commonConfig.ForgeConfigSpecBuilder, FMLPaths.CONFIGDIR.get().resolve(Connectivity.MODID + "-common.toml"));
+    }
 
-        commonConfig = com.getLeft();
+    public static void loadConfig(ForgeConfigSpec spec, Path path)
+    {
+
+        final CommentedFileConfig configData = CommentedFileConfig.builder(path)
+                                                 .sync()
+                                                 .preserveInsertionOrder()
+                                                 .autosave()
+                                                 .writingMode(WritingMode.REPLACE)
+                                                 .build();
+        configData.load();
+        spec.setConfig(configData);
     }
 
     public CommonConfiguration getCommonConfig()

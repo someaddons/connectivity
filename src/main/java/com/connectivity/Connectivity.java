@@ -27,14 +27,13 @@ public class Connectivity
 {
     public static final String MODID = "connectivity";
 
-    public static final  Logger        LOGGER = LogManager.getLogger();
-    public static        Configuration config;
+    public static final Logger        LOGGER = LogManager.getLogger();
+    public static       Configuration config = new Configuration();
 
     public Connectivity()
     {
         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
 
-        config = new Configuration();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(EventHandler.class);
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().addListener(this::onCommandsRegister);
