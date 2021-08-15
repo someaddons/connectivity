@@ -254,7 +254,7 @@ public class NetworkStatGatherer
         {
             playerData.add(getDataForPlayer(player, minutes));
         }
-        playerData.sort(Comparator.comparingLong(data -> data.totalBytes));
+        playerData.sort(Comparator.<PlayerPacketDataEntry>comparingLong(data -> data.totalBytes).reversed());
 
         source.sendSuccess(new StringTextComponent("Network players summary of last " + minutes + " minutes."), false);
 
