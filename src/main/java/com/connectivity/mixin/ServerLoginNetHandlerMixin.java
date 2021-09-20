@@ -1,12 +1,12 @@
 package com.connectivity.mixin;
 
 import com.connectivity.Connectivity;
-import net.minecraft.network.login.ServerLoginNetHandler;
+import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(value = ServerLoginNetHandler.class, priority = 1001)
+@Mixin(value = ServerLoginPacketListenerImpl.class, priority = 1001)
 /**
  * Set the login tick timeout
  */

@@ -7,8 +7,8 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.DecoderException;
-import net.minecraft.network.NettyCompressionDecoder;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.CompressionDecoder;
+import net.minecraft.network.FriendlyByteBuf;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.List;
 import java.util.zip.Inflater;
 
-@Mixin(value = NettyCompressionDecoder.class, priority = 99)
+@Mixin(value = CompressionDecoder.class, priority = 99)
 /**
  * Prints out the messages which were too big and disables client side exceptions if enabled
  */
@@ -34,7 +34,7 @@ public abstract class NettyCompressionDecoderMixin extends ByteToMessageDecoder
     {
         if (byteBuf.readableBytes() != 0)
         {
-            PacketBuffer packetbuffer = new PacketBuffer(byteBuf);
+            FriendlyByteBuf packetbuffer = new FriendlyByteBuf(byteBuf);
             int i = packetbuffer.readVarInt();
             if (i == 0)
             {

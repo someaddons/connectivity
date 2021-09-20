@@ -1,10 +1,10 @@
 package com.connectivity.mixin.networkstats;
 
 import com.connectivity.networkstats.INamedPacket;
-import net.minecraft.network.login.client.CCustomPayloadLoginPacket;
+import net.minecraft.network.protocol.login.ServerboundCustomQueryPacket;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(CCustomPayloadLoginPacket.class)
+@Mixin(ServerboundCustomQueryPacket.class)
 public class CCustomPayloadLoginPacketNameMixin implements INamedPacket
 {
     private String packetName = "";

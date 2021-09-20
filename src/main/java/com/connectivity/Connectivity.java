@@ -8,17 +8,15 @@ import com.connectivity.config.Configuration;
 import com.connectivity.event.ClientEventHandler;
 import com.connectivity.event.EventHandler;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.minecraft.command.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.FMLNetworkConstants;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,7 +30,7 @@ public class Connectivity
 
     public Connectivity()
     {
-        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
+        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "", (c, b) -> true));
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(EventHandler.class);
@@ -54,7 +52,7 @@ public class Connectivity
 
     public void onCommandsRegister(final RegisterCommandsEvent event)
     {
-        LiteralArgumentBuilder<CommandSource> root = LiteralArgumentBuilder.literal(MODID);
+        LiteralArgumentBuilder<CommandSourceStack> root = LiteralArgumentBuilder.literal(MODID);
         // Adds all command trees to the dispatcher to register the commands.
         event.getDispatcher().register(root.then(new CommandNetworkStatsTotal().build()));
         event.getDispatcher().register(root.then(new CommandNetworkStatsPlayers().build()));

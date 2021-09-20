@@ -1,9 +1,9 @@
 package com.connectivity.mixin;
 
 import com.connectivity.Connectivity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,7 +19,7 @@ import static com.connectivity.config.ConfigValues.PERCENT_FORMAT;
 public class NetworkRegistryMixin
 {
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void onInit(final PacketBuffer buffer, final ResourceLocation channelName, final String messageContext, final CallbackInfo ci)
+    private void onInit(final FriendlyByteBuf buffer, final ResourceLocation channelName, final String messageContext, final CallbackInfo ci)
     {
         final double percent = (buffer.writerIndex() / 1048576d) * 100;
         if (percent > 20)

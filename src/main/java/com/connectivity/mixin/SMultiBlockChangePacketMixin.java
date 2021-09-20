@@ -1,17 +1,17 @@
 package com.connectivity.mixin;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SMultiBlockChangePacket;
-import net.minecraft.util.math.SectionPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.io.IOException;
 
-@Mixin(SMultiBlockChangePacket.class)
+@Mixin(ClientboundSectionBlocksUpdatePacket.class)
 /**
  * Fixes braces to convert the state id to a long before shifting/operating on it, instead of afterwards.
  */
@@ -30,7 +30,7 @@ public abstract class SMultiBlockChangePacketMixin
     private boolean suppressLightUpdates;
 
     @Overwrite
-    public void write(PacketBuffer buf) throws IOException
+    public void write(FriendlyByteBuf buf) throws IOException
     {
         buf.writeLong(this.sectionPos.asLong());
         buf.writeBoolean(this.suppressLightUpdates);

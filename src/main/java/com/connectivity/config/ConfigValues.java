@@ -1,7 +1,7 @@
 package com.connectivity.config;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.ResourceLocationException;
+import net.minecraft.ResourceLocationException;
+import net.minecraft.resources.ResourceLocation;
 
 import java.text.DecimalFormat;
 import java.util.HashSet;

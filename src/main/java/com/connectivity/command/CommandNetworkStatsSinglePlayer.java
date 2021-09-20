@@ -7,8 +7,8 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.arguments.GameProfileArgument;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.GameProfileArgument;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,9 +21,9 @@ public class CommandNetworkStatsSinglePlayer implements IMCOPCommand
     public static final String NETWORKSTATS_SINGLE_PLAYER_COMMAND = "/connectivity packetsPlayer %s %d %d";
 
     @Override
-    public int onExecute(final CommandContext<CommandSource> context)
+    public int onExecute(final CommandContext<CommandSourceStack> context)
     {
-        final CommandSource source = context.getSource();
+        final CommandSourceStack source = context.getSource();
         Collection<GameProfile> profiles = new ArrayList<>();
         try
         {
@@ -45,19 +45,19 @@ public class CommandNetworkStatsSinglePlayer implements IMCOPCommand
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSource> build()
+    public LiteralArgumentBuilder<CommandSourceStack> build()
     {
         return
           IMCCommand.newLiteral(getName())
             .then(IMCCommand.newArgument("player", GameProfileArgument.gameProfile()).executes(this::checkPreConditionAndExecute)
-                    .then(IMCCommand.newArgument("minutes", IntegerArgumentType.integer(1, 400))
-                            .executes(this::executeWithMinutes)
-                            .then(IMCCommand.newArgument("index", IntegerArgumentType.integer(0, 400)).executes(this::executeWithMinutesandIndex))));
+              .then(IMCCommand.newArgument("minutes", IntegerArgumentType.integer(1, 400))
+                .executes(this::executeWithMinutes)
+                .then(IMCCommand.newArgument("index", IntegerArgumentType.integer(0, 400)).executes(this::executeWithMinutesandIndex))));
     }
 
-    private int executeWithMinutes(final CommandContext<CommandSource> context)
+    private int executeWithMinutes(final CommandContext<CommandSourceStack> context)
     {
-        final CommandSource source = context.getSource();
+        final CommandSourceStack source = context.getSource();
         if (!checkPreCondition(context))
         {
             return 0;
@@ -81,9 +81,9 @@ public class CommandNetworkStatsSinglePlayer implements IMCOPCommand
         return 0;
     }
 
-    private int executeWithMinutesandIndex(final CommandContext<CommandSource> context)
+    private int executeWithMinutesandIndex(final CommandContext<CommandSourceStack> context)
     {
-        final CommandSource source = context.getSource();
+        final CommandSourceStack source = context.getSource();
         if (!checkPreCondition(context))
         {
             return 0;

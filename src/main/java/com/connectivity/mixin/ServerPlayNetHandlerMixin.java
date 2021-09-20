@@ -1,12 +1,12 @@
 package com.connectivity.mixin;
 
 import com.connectivity.Connectivity;
-import net.minecraft.network.play.ServerPlayNetHandler;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(value = ServerPlayNetHandler.class, priority = 1001)
+@Mixin(value = ServerGamePacketListenerImpl.class, priority = 1001)
 /**
  * Sets the timeout constant
  */

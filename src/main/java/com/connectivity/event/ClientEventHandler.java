@@ -3,7 +3,7 @@ package com.connectivity.event;
 import com.connectivity.Connectivity;
 import com.connectivity.networkstats.NetworkStatGatherer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,7 +30,7 @@ public class ClientEventHandler
                 }
                 catch (Exception e)
                 {
-                    Minecraft.getInstance().player.sendMessage(new StringTextComponent("Excepted number of minutes as first parameter"), Minecraft.getInstance().player.getUUID());
+                    Minecraft.getInstance().player.sendMessage(new TextComponent("Excepted number of minutes as first parameter"), Minecraft.getInstance().player.getUUID());
                     return;
                 }
 
@@ -42,7 +42,7 @@ public class ClientEventHandler
                     }
                     catch (Exception e)
                     {
-                        Minecraft.getInstance().player.sendMessage(new StringTextComponent("Excepted number of shown row as second parameter"),
+                        Minecraft.getInstance().player.sendMessage(new TextComponent("Excepted number of shown row as second parameter"),
                           Minecraft.getInstance().player.getUUID());
                         return;
                     }

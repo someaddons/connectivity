@@ -1,26 +1,24 @@
 {
   "required": false,
   "package": "com.connectivity.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "refmap": "connectivity.refmap.json",
   "plugin": "com.connectivity.mixin.MixinConfig",
   "mixins": [
-    "ResourceLocationExceptionMixin",
-    "CCustomPayloadLoginPacketMixin",
+    "ConnectionProtocolMixin",
     "NettyCompressionDecoderMixin",
     "NetworkRegistryMixin",
     "NetworkSystemMixin",
-    "SCustomPayloadLoginPacketMixin",
-    "SCustomPayloadPlayPacketMixin",
+    "ResourceLocationExceptionMixin",
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
+    "SimpleChannelMixin",
     "SMultiBlockChangePacketMixin",
-    "networkstats.NettyPacketEncoderMixin",
     "networkstats.CCustomPayloadLoginPacketNameMixin",
     "networkstats.CCustomPayloadPacketNameMixin",
+    "networkstats.NettyPacketEncoderMixin",
     "networkstats.SCustomPayloadLoginPacketNameMixin",
-    "networkstats.SCustomPayloadPlayPacketNameMixin",
-    "SimpleChannelMixin"
+    "networkstats.SCustomPayloadPlayPacketNameMixin"
   ],
   "client": [
   ],

@@ -1,14 +1,14 @@
 package com.connectivity.networkstats;
 
 import com.connectivity.Connectivity;
-import net.minecraft.command.CommandSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -102,7 +102,7 @@ public class NetworkStatGatherer
         }
     }
 
-    public static PlayerPacketDataEntry getDataForPlayer(final ServerPlayerEntity playerEntity, final int minutes)
+    public static PlayerPacketDataEntry getDataForPlayer(final ServerPlayer playerEntity, final int minutes)
     {
         final String id = playerEntity.connection.connection.channel().remoteAddress().toString();
 
@@ -219,16 +219,16 @@ public class NetworkStatGatherer
 
     private static class PlayerPacketDataEntry
     {
-        final List<PacketData>   packetData;
-        final long               totalBytes;
-        final double             totalRate;
-        final ServerPlayerEntity playerEntity;
+        final List<PacketData> packetData;
+        final long             totalBytes;
+        final double           totalRate;
+        final ServerPlayer     playerEntity;
 
         private PlayerPacketDataEntry(
           final List<PacketData> packetData,
           final long totalBytes,
           final double totalRate,
-          final ServerPlayerEntity playerEntity)
+          final ServerPlayer playerEntity)
         {
             this.packetData = packetData;
             this.totalBytes = totalBytes;
@@ -242,21 +242,21 @@ public class NetworkStatGatherer
      *
      * @param source
      */
-    public static void reportAllPlayerSummary(final CommandSource source, final int minutes, final int startIndex)
+    public static void reportAllPlayerSummary(final CommandSourceStack source, final int minutes, final int startIndex)
     {
         DecimalFormat percent = new DecimalFormat("########.##");
-        final Style GREEN_BOLD = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.GREEN));
-        final Style BLUE = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.BLUE));
-        final Style RED = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.RED));
+        final Style GREEN_BOLD = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.GREEN));
+        final Style BLUE = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.BLUE));
+        final Style RED = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
 
         final List<PlayerPacketDataEntry> playerData = new ArrayList<>();
-        for (final ServerPlayerEntity player : source.getLevel().getServer().getPlayerList().getPlayers())
+        for (final ServerPlayer player : source.getLevel().getServer().getPlayerList().getPlayers())
         {
             playerData.add(getDataForPlayer(player, minutes));
         }
         playerData.sort(Comparator.<PlayerPacketDataEntry>comparingLong(data -> data.totalBytes).reversed());
 
-        source.sendSuccess(new StringTextComponent("Network players summary of last " + minutes + " minutes."), false);
+        source.sendSuccess(new TextComponent("Network players summary of last " + minutes + " minutes."), false);
 
         long byteSum = 0;
         for (final PlayerPacketDataEntry packetData : playerData)
@@ -269,18 +269,18 @@ public class NetworkStatGatherer
         {
             final PlayerPacketDataEntry playerPacketDataEntry = playerData.get(i);
             source.sendSuccess(
-              new StringTextComponent(percent.format(((double) (playerPacketDataEntry.totalBytes) / (byteSum)) * 100) + "% ")
-                .append(new StringTextComponent(playerPacketDataEntry.playerEntity.getName().getString() + " ")).setStyle(GREEN_BOLD)
-                .append(new StringTextComponent("r: " + percent.format(playerPacketDataEntry.totalRate) + "kb/s ").setStyle(BLUE))
-                .append(new StringTextComponent("total sent: " + percent.format((double) playerPacketDataEntry.totalBytes / 1000d) + "kb").setStyle(RED))
+              new TextComponent(percent.format(((double) (playerPacketDataEntry.totalBytes) / (byteSum)) * 100) + "% ")
+                .append(new TextComponent(playerPacketDataEntry.playerEntity.getName().getString() + " ")).setStyle(GREEN_BOLD)
+                .append(new TextComponent("r: " + percent.format(playerPacketDataEntry.totalRate) + "kb/s ").setStyle(BLUE))
+                .append(new TextComponent("total sent: " + percent.format((double) playerPacketDataEntry.totalBytes / 1000d) + "kb").setStyle(RED))
               , false);
         }
 
         if (i + 1 < playerData.size())
         {
-            source.sendSuccess(new StringTextComponent("next --->").setStyle(Style.EMPTY.withBold(true)
-                                                                               .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                                                                 String.format(NETWORKSTATS_PLAYER_SUMMARY_COMMAND, minutes, i)))), false);
+            source.sendSuccess(new TextComponent("next --->").setStyle(Style.EMPTY.withBold(true)
+              .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                String.format(NETWORKSTATS_PLAYER_SUMMARY_COMMAND, minutes, i)))), false);
         }
     }
 
@@ -289,17 +289,17 @@ public class NetworkStatGatherer
      *
      * @param source
      */
-    public static void reportStatsSummary(final CommandSource source, final int minutes, final int startIndex)
+    public static void reportStatsSummary(final CommandSourceStack source, final int minutes, final int startIndex)
     {
         List<PacketData> data = getDataByPacket(minutes);
         DecimalFormat percent = new DecimalFormat("########.##");
-        final Style GREEN_BOLD = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.GREEN));
-        final Style BLUE = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.BLUE));
-        final Style YELLOW = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.YELLOW));
-        final Style RED = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.RED));
-        final Style GOLD = Style.EMPTY.withBold(true).withColor(Color.fromLegacyFormat(TextFormatting.GOLD));
+        final Style GREEN_BOLD = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.GREEN));
+        final Style BLUE = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.BLUE));
+        final Style YELLOW = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+        final Style RED = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
+        final Style GOLD = Style.EMPTY.withBold(true).withColor(TextColor.fromLegacyFormat(ChatFormatting.GOLD));
 
-        source.sendSuccess(new StringTextComponent("Network packet summary of last " + minutes + " minutes."), false);
+        source.sendSuccess(new TextComponent("Network packet summary of last " + minutes + " minutes."), false);
 
         long totalBytes = 0;
         double totalRate = 0;
@@ -308,26 +308,26 @@ public class NetworkStatGatherer
             totalBytes += packetData.totalPacketBytes;
             totalRate += packetData.rate;
         }
-        source.sendSuccess(new StringTextComponent("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD), false);
+        source.sendSuccess(new TextComponent("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD), false);
 
         int i = 0;
         for (i = startIndex; i < startIndex + 5 && i < data.size(); i++)
         {
             final PacketData packetData = data.get(i);
             source.sendSuccess(
-              new StringTextComponent(percent.format(((double) (packetData.totalPacketBytes) / (totalBytes)) * 100) + "% ")
-                .append(new StringTextComponent(packetData.packetName + " ")).setStyle(GREEN_BOLD)
-                .append(new StringTextComponent("r: " + percent.format(packetData.rate) + "kb/s ").setStyle(BLUE))
-                .append(new StringTextComponent("count:" + packetData.packetCount + " ").setStyle(YELLOW))
-                .append(new StringTextComponent("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kb").setStyle(RED))
+              new TextComponent(percent.format(((double) (packetData.totalPacketBytes) / (totalBytes)) * 100) + "% ")
+                .append(new TextComponent(packetData.packetName + " ")).setStyle(GREEN_BOLD)
+                .append(new TextComponent("r: " + percent.format(packetData.rate) + "kb/s ").setStyle(BLUE))
+                .append(new TextComponent("count:" + packetData.packetCount + " ").setStyle(YELLOW))
+                .append(new TextComponent("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kb").setStyle(RED))
               , false);
         }
 
         if (i + 1 < data.size())
         {
-            source.sendSuccess(new StringTextComponent("next --->").setStyle(Style.EMPTY.withBold(true)
-                                                                               .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                                                                 String.format(NETWORKSTATS_SUMMARY_COMMAND, minutes, i)))), false);
+            source.sendSuccess(new TextComponent("next --->").setStyle(Style.EMPTY.withBold(true)
+              .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                String.format(NETWORKSTATS_SUMMARY_COMMAND, minutes, i)))), false);
         }
     }
 
@@ -336,24 +336,24 @@ public class NetworkStatGatherer
      *
      * @param source
      */
-    public static void reportPlayerSummary(final CommandSource source, final ServerPlayerEntity playerEntity, final int minutes, final int startIndex)
+    public static void reportPlayerSummary(final CommandSourceStack source, final ServerPlayer playerEntity, final int minutes, final int startIndex)
     {
         if (playerEntity == null)
         {
-            source.sendSuccess(new StringTextComponent("Player not found"), true);
+            source.sendSuccess(new TextComponent("Player not found"), true);
             return;
         }
 
         final PlayerPacketDataEntry playerPacketData = getDataForPlayer(playerEntity, minutes);
         final List<PacketData> data = playerPacketData.packetData;
         DecimalFormat percent = new DecimalFormat("########.##");
-        final Style GREEN_BOLD = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.GREEN));
-        final Style BLUE = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.BLUE));
-        final Style YELLOW = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.YELLOW));
-        final Style RED = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.RED));
-        final Style GOLD = Style.EMPTY.withBold(true).withColor(Color.fromLegacyFormat(TextFormatting.GOLD));
+        final Style GREEN_BOLD = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.GREEN));
+        final Style BLUE = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.BLUE));
+        final Style YELLOW = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+        final Style RED = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
+        final Style GOLD = Style.EMPTY.withBold(true).withColor(TextColor.fromLegacyFormat(ChatFormatting.GOLD));
 
-        source.sendSuccess(new StringTextComponent("Network packet summary for " + playerEntity.getName().getString() + " of last " + minutes + " minutes."), false);
+        source.sendSuccess(new TextComponent("Network packet summary for " + playerEntity.getName().getString() + " of last " + minutes + " minutes."), false);
 
         long totalBytes = 0;
         double totalRate = 0;
@@ -362,29 +362,29 @@ public class NetworkStatGatherer
             totalBytes += packetData.totalPacketBytes;
             totalRate += packetData.rate;
         }
-        source.sendSuccess(new StringTextComponent("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD), false);
+        source.sendSuccess(new TextComponent("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD), false);
 
         int i = 0;
         for (i = startIndex; i < startIndex + 5 && i < data.size(); i++)
         {
             final PacketData packetData = data.get(i);
             source.sendSuccess(
-              new StringTextComponent(percent.format(((double) (packetData.totalPacketBytes) / (totalBytes)) * 100) + "% ")
-                .append(new StringTextComponent(packetData.packetName + " ")).setStyle(GREEN_BOLD)
-                .append(new StringTextComponent("r: " + percent.format(packetData.rate) + "kb/s ").setStyle(BLUE))
-                .append(new StringTextComponent("count:" + packetData.packetCount + " ").setStyle(YELLOW))
-                .append(new StringTextComponent("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kb").setStyle(RED))
+              new TextComponent(percent.format(((double) (packetData.totalPacketBytes) / (totalBytes)) * 100) + "% ")
+                .append(new TextComponent(packetData.packetName + " ")).setStyle(GREEN_BOLD)
+                .append(new TextComponent("r: " + percent.format(packetData.rate) + "kb/s ").setStyle(BLUE))
+                .append(new TextComponent("count:" + packetData.packetCount + " ").setStyle(YELLOW))
+                .append(new TextComponent("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kb").setStyle(RED))
               , false);
         }
 
         if (i + 1 < data.size())
         {
-            source.sendSuccess(new StringTextComponent("next --->").setStyle(Style.EMPTY.withBold(true)
-                                                                               .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                                                                 String.format(NETWORKSTATS_SINGLE_PLAYER_COMMAND,
-                                                                                   playerEntity.getName().getString(),
-                                                                                   minutes,
-                                                                                   i)))), false);
+            source.sendSuccess(new TextComponent("next --->").setStyle(Style.EMPTY.withBold(true)
+              .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                String.format(NETWORKSTATS_SINGLE_PLAYER_COMMAND,
+                  playerEntity.getName().getString(),
+                  minutes,
+                  i)))), false);
         }
     }
 
@@ -393,7 +393,7 @@ public class NetworkStatGatherer
      *
      * @param source
      */
-    public static void reportClientStatsSummary(final PlayerEntity playerEntity, final int minutes, final int startIndex)
+    public static void reportClientStatsSummary(final Player playerEntity, final int minutes, final int startIndex)
     {
         if (playerEntity == null)
         {
@@ -402,13 +402,13 @@ public class NetworkStatGatherer
 
         List<PacketData> data = getDataByPacket(minutes);
         DecimalFormat percent = new DecimalFormat("########.##");
-        final Style GREEN_BOLD = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.GREEN));
-        final Style BLUE = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.BLUE));
-        final Style YELLOW = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.YELLOW));
-        final Style RED = Style.EMPTY.withBold(false).withColor(Color.fromLegacyFormat(TextFormatting.RED));
-        final Style GOLD = Style.EMPTY.withBold(true).withColor(Color.fromLegacyFormat(TextFormatting.GOLD));
+        final Style GREEN_BOLD = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.GREEN));
+        final Style BLUE = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.BLUE));
+        final Style YELLOW = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+        final Style RED = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
+        final Style GOLD = Style.EMPTY.withBold(true).withColor(TextColor.fromLegacyFormat(ChatFormatting.GOLD));
 
-        playerEntity.sendMessage(new StringTextComponent("Network outgoing packet summary of last " + minutes + " minutes."), playerEntity.getUUID());
+        playerEntity.sendMessage(new TextComponent("Network outgoing packet summary of last " + minutes + " minutes."), playerEntity.getUUID());
 
         long totalBytes = 0;
         double totalRate = 0;
@@ -417,7 +417,7 @@ public class NetworkStatGatherer
             totalBytes += packetData.totalPacketBytes;
             totalRate += packetData.rate;
         }
-        playerEntity.sendMessage(new StringTextComponent("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD),
+        playerEntity.sendMessage(new TextComponent("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD),
           playerEntity.getUUID());
 
         int i = 0;
@@ -425,19 +425,19 @@ public class NetworkStatGatherer
         {
             final PacketData packetData = data.get(i);
             playerEntity.sendMessage(
-              new StringTextComponent(percent.format(((double) (packetData.totalPacketBytes) / (totalBytes)) * 100) + "% ")
-                .append(new StringTextComponent(packetData.packetName + " ")).setStyle(GREEN_BOLD)
-                .append(new StringTextComponent("r: " + percent.format(packetData.rate) + "kb/s ").setStyle(BLUE))
-                .append(new StringTextComponent("count:" + packetData.packetCount + " ").setStyle(YELLOW))
-                .append(new StringTextComponent("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kb").setStyle(RED))
+              new TextComponent(percent.format(((double) (packetData.totalPacketBytes) / (totalBytes)) * 100) + "% ")
+                .append(new TextComponent(packetData.packetName + " ")).setStyle(GREEN_BOLD)
+                .append(new TextComponent("r: " + percent.format(packetData.rate) + "kb/s ").setStyle(BLUE))
+                .append(new TextComponent("count:" + packetData.packetCount + " ").setStyle(YELLOW))
+                .append(new TextComponent("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kb").setStyle(RED))
               , playerEntity.getUUID());
         }
 
         if (i + 1 < data.size())
         {
-            playerEntity.sendMessage(new StringTextComponent("next --->").setStyle(Style.EMPTY.withBold(true)
-                                                                                     .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                                                                       String.format(NETWORKSTATS_CLIENT_FAKE_COMMAND, minutes, i)))), playerEntity.getUUID());
+            playerEntity.sendMessage(new TextComponent("next --->").setStyle(Style.EMPTY.withBold(true)
+              .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                String.format(NETWORKSTATS_CLIENT_FAKE_COMMAND, minutes, i)))), playerEntity.getUUID());
         }
     }
 }
