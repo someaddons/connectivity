@@ -17,7 +17,7 @@ public class MixinConfig implements IMixinConfigPlugin
     @Override
     public void onLoad(final String mixinPackage)
     {
-
+        System.getProperties().setProperty("forge.disablePacketCompressionDebug", "true");
     }
 
     @Override
