@@ -32,52 +32,46 @@ public abstract class NettyCompressionDecoderMixin extends ByteToMessageDecoder
     @Overwrite
     public void decode(ChannelHandlerContext context, ByteBuf byteBuf, List<Object> decoded) throws Exception
     {
-        try
+        if (byteBuf.readableBytes() != 0)
         {
-            if (byteBuf.readableBytes() > 0)
+            FriendlyByteBuf packetbuffer = new FriendlyByteBuf(byteBuf);
+            int i = packetbuffer.readVarInt();
+            if (i == 0)
             {
-                FriendlyByteBuf packetbuffer = new FriendlyByteBuf(byteBuf);
-                int i = packetbuffer.readVarInt();
-                if (i == 0)
-                {
-                    decoded.add(packetbuffer.readBytes(packetbuffer.readableBytes()));
-                }
-                else
-                {
-                    byte[] abyte = new byte[packetbuffer.readableBytes()];
-                    packetbuffer.readBytes(abyte);
-                    this.inflater.setInput(abyte);
-                    byte[] abyte1 = new byte[i];
-                    this.inflater.inflate(abyte1);
-                    decoded.add(Unpooled.wrappedBuffer(abyte1));
-                    this.inflater.reset();
+                decoded.add(packetbuffer.readBytes(packetbuffer.readableBytes()));
+            }
+            else
+            {
+                byte[] abyte = new byte[packetbuffer.readableBytes()];
+                packetbuffer.readBytes(abyte);
+                this.inflater.setInput(abyte);
+                byte[] abyte1 = new byte[i];
+                this.inflater.inflate(abyte1);
+                decoded.add(Unpooled.wrappedBuffer(abyte1));
+                this.inflater.reset();
 
-                    if (i < this.threshold)
+                if (i < this.threshold)
+                {
+                    printDebug(decoded);
+                    if (!Connectivity.config.getCommonConfig().disablePacketLimits.get())
                     {
-                        if (!Connectivity.config.getCommonConfig().disablePacketLimits.get())
-                        {
-                            throw new DecoderException("Badly compressed packet - size of " + i + " is below server threshold of " + this.threshold);
-                        }
+                        throw new DecoderException("Badly compressed packet - size of " + i + " is below server threshold of " + this.threshold);
                     }
+                }
 
-                    if (i > 2097152)
+                if (i > 2097152)
+                {
+                    printDebug(decoded);
+                    if (!Connectivity.config.getCommonConfig().disablePacketLimits.get())
                     {
-                        if (!Connectivity.config.getCommonConfig().disablePacketLimits.get())
-                        {
-                            throw new DecoderException("Badly compressed packet - size of " + i + " is larger than protocol maximum of " + 2097152);
-                        }
+                        throw new DecoderException("Badly compressed packet - size of " + i + " is larger than protocol maximum of " + 2097152);
                     }
                 }
             }
         }
-        catch (Exception e)
-        {
-            printDebug(decoded, byteBuf);
-            //throw e;
-        }
     }
 
-    private void printDebug(List<Object> decodingResults, final ByteBuf rawData)
+    private void printDebug(List<Object> decodingResults)
     {
         if (!Connectivity.config.getCommonConfig().debugPrintMessages.get())
         {
@@ -86,10 +80,6 @@ public abstract class NettyCompressionDecoderMixin extends ByteToMessageDecoder
 
         Connectivity.LOGGER.error("Received too large message, debug print below!");
         Connectivity.LOGGER.error("----BEGIND PRINTING PACKET-----");
-        rawData.resetReaderIndex();
-        Connectivity.LOGGER.error("RawData:" + rawData.toString(Charsets.UTF_8));
-        Connectivity.LOGGER.error("----END PRINTING PACKET-----");
-        Connectivity.LOGGER.error("----BEGIND PRINTING DECODED PACKET RESULTS-----");
         for (int i = 0; i < decodingResults.size(); i++)
         {
             final ByteBuf buf = ((ByteBuf) decodingResults.get(i));
@@ -100,6 +90,6 @@ public abstract class NettyCompressionDecoderMixin extends ByteToMessageDecoder
             Connectivity.LOGGER.error("Data:");
             Connectivity.LOGGER.error(buf.toString(Charsets.UTF_8));
         }
-        Connectivity.LOGGER.error("----END PRINTING DECODED PACKET RESULTS-----");
+        Connectivity.LOGGER.error("----END PRINTING PACKET-----");
     }
 }
