@@ -1,5 +1,6 @@
 package com.connectivity.mixin.networkstats;
 
+import com.connectivity.Connectivity;
 import com.connectivity.networkstats.INamedPacket;
 import com.connectivity.networkstats.NetworkStatGatherer;
 import io.netty.buffer.ByteBuf;
@@ -27,5 +28,20 @@ public class NettyPacketEncoderMixin
         }
 
         NetworkStatGatherer.add(channelHandlerContext.channel().remoteAddress().toString(), name, packetBuffer.writerIndex());
+    }
+
+    @Inject(method = "encode(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;Lio/netty/buffer/ByteBuf;)V", at = @At(value = "INVOKE", target = "Ljava/io/IOException;<init>(Ljava/lang/String;)V"))
+    public void onNoPacket(final ChannelHandlerContext j, final Packet<?> packet, final ByteBuf friendlybytebuf, final CallbackInfo ci)
+    {
+        String name = packet.getClass().getSimpleName();
+        if (packet instanceof INamedPacket)
+        {
+            if (!((INamedPacket) packet).getName().isEmpty())
+            {
+                name = ((INamedPacket) packet).getName();
+            }
+        }
+
+        Connectivity.LOGGER.warn("Packet not registered: " + name);
     }
 }

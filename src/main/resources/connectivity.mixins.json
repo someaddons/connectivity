@@ -1,10 +1,11 @@
 {
   "required": false,
   "package": "com.connectivity.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_17",
   "refmap": "connectivity.refmap.json",
   "plugin": "com.connectivity.mixin.MixinConfig",
   "mixins": [
+    "ConnectionMixin",
     "ConnectionProtocolMixin",
     "NettyCompressionDecoderMixin",
     "NetworkManagerMixin",
