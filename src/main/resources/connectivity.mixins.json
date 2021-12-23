@@ -5,7 +5,6 @@
   "refmap": "connectivity.refmap.json",
   "plugin": "com.connectivity.mixin.MixinConfig",
   "mixins": [
-    "ConnectionMixin",
     "ConnectionProtocolMixin",
     "NettyCompressionDecoderMixin",
     "NetworkManagerMixin",
