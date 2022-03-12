@@ -5,6 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,15 +19,19 @@ import java.io.IOException;
 public abstract class SMultiBlockChangePacketMixin
 {
     @Shadow
+    @Final
     private short[] positions;
 
     @Shadow
+    @Final
     private SectionPos sectionPos;
 
     @Shadow
+    @Final
     private BlockState[] states;
 
     @Shadow
+    @Final
     private boolean suppressLightUpdates;
 
     @Overwrite
