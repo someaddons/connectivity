@@ -1,0 +1,28 @@
+{
+  "required": false,
+  "package": "com.connectivity.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "com.connectivity.mixin.MixinConfig",
+  "mixins": [
+    "ClientboundCustomPayloadPacketMixin",
+    "ConnectionProtocolMixin",
+    "NettyCompressionDecoderMixin",
+    "NetworkManagerMixin",
+    "NetworkSystemMixin",
+    "ResourceLocationExceptionMixin",
+    "ServerLoginNetHandlerMixin",
+    "ServerPlayNetHandlerMixin",
+    "SMultiBlockChangePacketMixin",
+    "networkstats.CCustomPayloadLoginPacketNameMixin",
+    "networkstats.CCustomPayloadPacketNameMixin",
+    "networkstats.NettyPacketEncoderMixin",
+    "networkstats.SCustomPayloadLoginPacketNameMixin",
+    "networkstats.SCustomPayloadPlayPacketNameMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

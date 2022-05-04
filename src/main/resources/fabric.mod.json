@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "connectivity",
+  "version": "${version}",
+
+  "name": "Connectivity Mod",
+  "description": "Connectivity fixes conntection issues",
+  "authors": [
+    "Someaddons"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "ARR",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.connectivity.Connectivity"
+    ]
+  },
+  "mixins": [
+    "connectivity.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
