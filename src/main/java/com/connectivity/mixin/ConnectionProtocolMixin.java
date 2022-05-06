@@ -4,6 +4,7 @@ import com.connectivity.Connectivity;
 import com.connectivity.networkstats.IPacketDataSetter;
 import com.google.common.base.Charsets;
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.Packet;
@@ -30,6 +31,10 @@ public class ConnectionProtocolMixin<T extends PacketListener>
     @Shadow
     @Final
     public List<Function<FriendlyByteBuf, ? extends Packet<T>>> idToDeserializer;
+
+    @Shadow
+    @Final
+    private Object2IntMap<Class<? extends Packet<T>>> classToId;
 
     @Inject(method = "addPacket", at = @At(value = "HEAD"), cancellable = true)
     public <P extends Packet<T>> void onAdd(
@@ -103,9 +108,20 @@ public class ConnectionProtocolMixin<T extends PacketListener>
             };
         }
 
+        int i = this.idToDeserializer.size();
+        int j = this.classToId.put(pClass, i);
+        if (j != -1)
         {
-            idToDeserializer.add(byteBufPFunction);
+            String s = "Packet " + pClass + " is already registered to ID " + j;
+            Connectivity.LOGGER.error(s);
+            throw new IllegalArgumentException(s);
         }
+        else
+        {
+            this.idToDeserializer.add(byteBufPFunction);
+        }
+
+        cir.setReturnValue(this);
     }
 
     private void reportData(final Class pClass, final FriendlyByteBuf data)

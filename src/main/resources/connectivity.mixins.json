@@ -5,6 +5,7 @@
   "plugin": "com.connectivity.mixin.MixinConfig",
   "mixins": [
     "ClientboundCustomPayloadPacketMixin",
+    "ConnectionErrorMixin",
     "ConnectionProtocolMixin",
     "NettyCompressionDecoderMixin",
     "NetworkManagerMixin",
