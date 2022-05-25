@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Connectivity Mod",
-  "description": "Connectivity fixes conntection issues",
+  "description": "Connectivity fixes connection issues",
   "authors": [
     "Someaddons"
   ],
@@ -14,7 +14,7 @@
   },
 
   "license": "ARR",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/modid/logo.png",
 
   "environment": "*",
   "entrypoints": {
