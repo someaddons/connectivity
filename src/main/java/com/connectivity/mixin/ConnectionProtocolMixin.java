@@ -74,7 +74,7 @@ public class ConnectionProtocolMixin<T extends PacketListener>
                 final int transactionId = buf.readVarInt();
                 final ResourceLocation identifier = buf.readResourceLocation();
                 final int bytes = buf.readableBytes();
-                if (bytes >= 0 && bytes <= 1048576)
+                if (!(bytes >= 0 && bytes <= 1048576))
                 {
                     if (Connectivity.config.getCommonConfig().debugPrintMessages)
                     {
@@ -93,7 +93,7 @@ public class ConnectionProtocolMixin<T extends PacketListener>
             {
                 final ResourceLocation identifier = buf.readResourceLocation();
                 final int bytes = buf.readableBytes();
-                if (bytes >= 0 && bytes <= 1048576)
+                if (!(bytes >= 0 && bytes <= 1048576))
                 {
                     if (Connectivity.config.getCommonConfig().debugPrintMessages)
                     {
