@@ -26,11 +26,11 @@ public class NetworkRegistryMixin
         {
             if (percent < 100)
             {
-                Connectivity.LOGGER.warn("Login payload for " + messageContext + " is using " + PERCENT_FORMAT.format(percent) + "% of max allowed vanilla size");
+                Connectivity.LOGGER.info("Login payload for " + messageContext + " is using " + PERCENT_FORMAT.format(percent) + "% of max allowed vanilla size");
             }
             else
             {
-                Connectivity.LOGGER.warn("Login payload for " + messageContext + " is using " + PERCENT_FORMAT.format(percent)
+                Connectivity.LOGGER.info("Login payload for " + messageContext + " is using " + PERCENT_FORMAT.format(percent)
                                            + "% of max allowed vanilla size and will cause errors during login if connectivity is not present on client side.");
             }
         }

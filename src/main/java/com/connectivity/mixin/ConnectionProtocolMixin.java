@@ -3,6 +3,7 @@ package com.connectivity.mixin;
 import com.connectivity.Connectivity;
 import com.google.common.base.Charsets;
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.PacketListener;
@@ -31,11 +32,15 @@ public class ConnectionProtocolMixin<T extends PacketListener>
     @Final
     public List<Function<FriendlyByteBuf, ? extends Packet<T>>> idToDeserializer;
 
+    @Shadow
+    @Final
+    public Object2IntMap<Class<? extends Packet<T>>> classToId;
+
     @Inject(method = "addPacket", at = @At(value = "HEAD"), cancellable = true)
     public <P extends Packet<T>> void onAdd(
       final Class<P> pClass,
       Function<FriendlyByteBuf, P> byteBufPFunction,
-      final CallbackInfoReturnable<ConnectionProtocol.PacketSet<T>> cir)
+      final CallbackInfoReturnable cir)
     {
         if (pClass == ServerboundCustomQueryPacket.class && Connectivity.config.getCommonConfig().disableLoginLimits.get())
         {
@@ -69,7 +74,7 @@ public class ConnectionProtocolMixin<T extends PacketListener>
                 final int transactionId = buf.readVarInt();
                 final ResourceLocation identifier = buf.readResourceLocation();
                 final int bytes = buf.readableBytes();
-                if (bytes >= 0 && bytes <= 1048576)
+                if (!(bytes >= 0 && bytes <= 1048576))
                 {
                     if (Connectivity.config.getCommonConfig().debugPrintMessages.get())
                     {
@@ -88,7 +93,7 @@ public class ConnectionProtocolMixin<T extends PacketListener>
             {
                 final ResourceLocation identifier = buf.readResourceLocation();
                 final int bytes = buf.readableBytes();
-                if (bytes >= 0 && bytes <= 1048576)
+                if (!(bytes >= 0 && bytes <= 1048576))
                 {
                     if (Connectivity.config.getCommonConfig().debugPrintMessages.get())
                     {
@@ -103,14 +108,25 @@ public class ConnectionProtocolMixin<T extends PacketListener>
             };
         }
 
+        int i = this.idToDeserializer.size();
+        int j = this.classToId.put(pClass, i);
+        if (j != -1)
         {
-            idToDeserializer.add(byteBufPFunction);
+            String s = "Packet " + pClass + " is already registered to ID " + j;
+            Connectivity.LOGGER.error(s);
+            throw new IllegalArgumentException(s);
         }
+        else
+        {
+            this.idToDeserializer.add(byteBufPFunction);
+        }
+
+        cir.setReturnValue(this);
     }
 
     private void reportData(final Class pClass, final FriendlyByteBuf data)
     {
-        Connectivity.LOGGER.warn("Too big payload data for class:" + pClass.getSimpleName());
+        Connectivity.LOGGER.warn("Too big payload data for class:" + pClass.getSimpleName() + " bytes:" + data.readableBytes());
         Connectivity.LOGGER.warn("Data:" + data.toString(Charsets.UTF_8));
     }
 }

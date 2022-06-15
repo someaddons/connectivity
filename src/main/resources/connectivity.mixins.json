@@ -5,6 +5,7 @@
   "refmap": "connectivity.refmap.json",
   "plugin": "com.connectivity.mixin.MixinConfig",
   "mixins": [
+    "ConnectionErrorMixin",
     "ConnectionProtocolMixin",
     "NettyCompressionDecoderMixin",
     "NetworkManagerMixin",
@@ -22,6 +23,7 @@
     "networkstats.SCustomPayloadPlayPacketNameMixin"
   ],
   "client": [
+    "CompoundTagMixin"
   ],
   "injectors": {
     "defaultRequire": 1
