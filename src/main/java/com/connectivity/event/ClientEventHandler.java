@@ -3,7 +3,7 @@ package com.connectivity.event;
 import com.connectivity.Connectivity;
 import com.connectivity.networkstats.NetworkStatGatherer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
@@ -28,7 +28,7 @@ public class ClientEventHandler
                 }
                 catch (Exception e)
                 {
-                    Minecraft.getInstance().player.sendMessage(new TextComponent("Excepted number of minutes as first parameter"), Minecraft.getInstance().player.getUUID());
+                    Minecraft.getInstance().player.sendSystemMessage(Component.literal("Excepted number of minutes as first parameter"));
                     return;
                 }
 
@@ -40,8 +40,7 @@ public class ClientEventHandler
                     }
                     catch (Exception e)
                     {
-                        Minecraft.getInstance().player.sendMessage(new TextComponent("Excepted number of shown row as second parameter"),
-                          Minecraft.getInstance().player.getUUID());
+                        Minecraft.getInstance().player.sendSystemMessage(Component.literal("Excepted number of shown row as second parameter"));
                         return;
                     }
                 }
