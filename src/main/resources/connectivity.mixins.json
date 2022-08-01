@@ -12,6 +12,7 @@
     "NetworkSystemMixin",
     "ResourceLocationExceptionMixin",
     "ServerLoginNetHandlerMixin",
+    "ServerNetworkingImplMixin",
     "ServerPlayNetHandlerMixin",
     "SMultiBlockChangePacketMixin",
     "networkstats.CCustomPayloadLoginPacketNameMixin",
