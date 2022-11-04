@@ -14,9 +14,6 @@ public class ConnectionErrorMixin
     @Inject(method = "exceptionCaught", at = @At("HEAD"))
     public void on(final ChannelHandlerContext channelHandlerContext, final Throwable throwable, final CallbackInfo ci)
     {
-        if (Connectivity.config.getCommonConfig().debugPrintMessages.get())
-        {
-            Connectivity.LOGGER.warn(throwable);
-        }
+        Connectivity.LOGGER.warn(throwable);
     }
 }

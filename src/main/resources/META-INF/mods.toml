@@ -49,6 +49,6 @@ Lightweight mod which solves connection and packet size issues.
 [[dependencies.connectivity]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.2,)"
+    versionRange="[1.19,)"
     ordering="NONE"
     side="BOTH"
