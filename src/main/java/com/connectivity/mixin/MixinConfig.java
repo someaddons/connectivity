@@ -32,12 +32,12 @@ public class MixinConfig implements IMixinConfigPlugin
     @Override
     public boolean shouldApplyMixin(final String targetClassName, final String mixinClassName)
     {
-        if (mixinClassName.equals("SMultiBlockChangePacketMixin") && FabricLoader.getInstance().isModLoaded("polymer"))
+        if (mixinClassName.contains("SMultiBlockChangePacketMixin") && FabricLoader.getInstance().isModLoaded("polymer"))
         {
             return false;
         }
 
-        if (mixinClassName.equals("SMultiBlockChangePacketMixinPolyCompat") && !FabricLoader.getInstance().isModLoaded("polymer"))
+        if (mixinClassName.contains("SMultiBlockChangePacketMixinPolyCompat") && !FabricLoader.getInstance().isModLoaded("polymer"))
         {
             return false;
         }
