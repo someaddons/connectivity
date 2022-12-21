@@ -2,19 +2,24 @@ package com.connectivity.mixin.networkstats;
 
 import com.connectivity.networkstats.INamedPacket;
 import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ClientboundCustomPayloadPacket.class)
-public class SCustomPayloadPlayPacketNameMixin implements INamedPacket
+public abstract class SCustomPayloadPlayPacketNameMixin implements INamedPacket
 {
+    @Shadow
+    public abstract ResourceLocation getIdentifier();
+
     private String packetName = "";
 
     @Override
     public String getName()
     {
-        if (packetName == null)
+        if (packetName.isEmpty())
         {
-            return "";
+            return getIdentifier().toString();
         }
         return packetName;
     }

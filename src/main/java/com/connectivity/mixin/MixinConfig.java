@@ -1,5 +1,6 @@
 package com.connectivity.mixin;
 
+import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -17,7 +18,7 @@ public class MixinConfig implements IMixinConfigPlugin
     @Override
     public void onLoad(final String mixinPackage)
     {
-        System.getProperties().setProperty("forge.disablePacketCompressionDebug", "true");
+
     }
 
     @Override
@@ -31,6 +32,16 @@ public class MixinConfig implements IMixinConfigPlugin
     @Override
     public boolean shouldApplyMixin(final String targetClassName, final String mixinClassName)
     {
+        if (mixinClassName.endsWith("SMultiBlockChangePacketMixin") && FabricLoader.getInstance().isModLoaded("polymer"))
+        {
+            return false;
+        }
+
+        if (mixinClassName.endsWith("SMultiBlockChangePacketMixinPolyCompat") && !FabricLoader.getInstance().isModLoaded("polymer"))
+        {
+            return false;
+        }
+
         if (disabledMixins.containsKey(mixinClassName))
         {
             if (disabledMixins.get(mixinClassName).get())
