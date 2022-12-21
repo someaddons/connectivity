@@ -23,6 +23,7 @@
     "networkstats.SCustomPayloadPlayPacketNameMixin"
   ],
   "client": [
+    "ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "com.connectivity.Connectivity"
+    ],
+    "client": [
+      "com.connectivity.Connectivity"
     ]
   },
   "mixins": [

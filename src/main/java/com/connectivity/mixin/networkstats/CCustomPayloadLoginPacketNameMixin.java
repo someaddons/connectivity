@@ -12,10 +12,6 @@ public class CCustomPayloadLoginPacketNameMixin implements INamedPacket
     @Override
     public String getName()
     {
-        if (packetName == null)
-        {
-            return "";
-        }
         return packetName;
     }
 
