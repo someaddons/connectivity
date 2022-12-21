@@ -5,6 +5,7 @@ import com.connectivity.networkstats.IPacketDataSetter;
 import com.google.common.base.Charsets;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.Packet;
@@ -87,7 +88,7 @@ public class ConnectionProtocolMixin<T extends PacketListener>
             };
         }
 
-        if (pClass == ClientboundCustomPayloadPacket.class && Connectivity.config.getCommonConfig().disableLoginLimits)
+        if (!FabricLoader.getInstance().isModLoaded("imm_ptl_core") && pClass == ClientboundCustomPayloadPacket.class && Connectivity.config.getCommonConfig().disableLoginLimits)
         {
             byteBufPFunction = buf ->
             {
@@ -128,5 +129,6 @@ public class ConnectionProtocolMixin<T extends PacketListener>
     {
         Connectivity.LOGGER.warn("Too big payload data for class:" + pClass.getSimpleName());
         Connectivity.LOGGER.warn("Data:" + data.toString(Charsets.UTF_8));
+        data.resetReaderIndex();
     }
 }
