@@ -61,7 +61,7 @@ public abstract class SMultiBlockChangePacketMixinPolyCompat
     @Redirect(method = "<init>(Lnet/minecraft/network/FriendlyByteBuf;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/IdMapper;byId(I)Ljava/lang/Object;"), require = 0)
     private Object polymer_decodeState(final IdMapper instance, final int index)
     {
-        return index > 0 ? InternalClientRegistry.decodeState(index) : instance.getId(index);
+        return index > 0 ? InternalClientRegistry.decodeState(index) : instance.byId(index);
     }
 
     @Environment(EnvType.CLIENT)
