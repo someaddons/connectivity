@@ -24,7 +24,7 @@ public class CommonConfiguration
         builder.comment("Should play packet size limits be disabled? Error:(Badly compressed packet) default:true");
         disablePacketLimits = builder.define("disablePacketLimits", true);
 
-        builder.comment("If enabled all messages exceeding normal limits will be printed to log. default:false");
+        builder.comment("Enable addition debug logging for networking errors. default:false");
         debugPrintMessages = builder.define("debugPrintMessages", false);
 
         builder.comment("Set the max login timeout in ticks. 20 ticks = 1 sec, default = 120 seconds");

@@ -20,7 +20,8 @@
     "networkstats.CCustomPayloadPacketNameMixin",
     "networkstats.NettyPacketEncoderMixin",
     "networkstats.SCustomPayloadLoginPacketNameMixin",
-    "networkstats.SCustomPayloadPlayPacketNameMixin"
+    "networkstats.SCustomPayloadPlayPacketNameMixin",
+    "ClientBoundCustomPayloadPacketLMixin"
   ],
   "client": [
     "CompoundTagMixin"
