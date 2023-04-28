@@ -1,5 +1,6 @@
 package com.connectivity.mixin;
 
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -18,6 +19,7 @@ public class MixinConfig implements IMixinConfigPlugin
     public void onLoad(final String mixinPackage)
     {
         System.getProperties().setProperty("forge.disablePacketCompressionDebug", "true");
+        disabledMixins.put(basePath + "ClientBoundCustomPayloadPacketLMixin", () -> FMLLoader.getLoadingModList().getModFileById("xlpackets") != null);
     }
 
     @Override
@@ -33,10 +35,7 @@ public class MixinConfig implements IMixinConfigPlugin
     {
         if (disabledMixins.containsKey(mixinClassName))
         {
-            if (disabledMixins.get(mixinClassName).get())
-            {
-                return false;
-            }
+            return !disabledMixins.get(mixinClassName).get();
         }
 
         return true;

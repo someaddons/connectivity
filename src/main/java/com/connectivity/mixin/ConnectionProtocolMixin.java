@@ -67,10 +67,11 @@ public class ConnectionProtocolMixin<T extends PacketListener>
             };
         }
 
-        if (pClass == ClientboundCustomPayloadPacket.class && Connectivity.config.getCommonConfig().disableLoginLimits.get())
+        if (pClass == ClientboundCustomQueryPacket.class && Connectivity.config.getCommonConfig().disableLoginLimits.get())
         {
             byteBufPFunction = buf ->
             {
+                final int transactionId = buf.readVarInt();
                 final ResourceLocation identifier = buf.readResourceLocation();
                 final int bytes = buf.readableBytes();
                 if (!(bytes >= 0 && bytes <= 1048576))
@@ -80,11 +81,9 @@ public class ConnectionProtocolMixin<T extends PacketListener>
                         reportData(pClass, buf);
                     }
                 }
-                final FriendlyByteBuf data = new FriendlyByteBuf(buf.readBytes(bytes));
+                FriendlyByteBuf data = new FriendlyByteBuf(buf.readBytes(bytes));
 
-                ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(identifier, new FriendlyByteBuf(Unpooled.buffer()));
-                packet.data = data;
-                return (P) packet;
+                return (P) new ClientboundCustomQueryPacket(transactionId, identifier, data);
             };
         }
 
