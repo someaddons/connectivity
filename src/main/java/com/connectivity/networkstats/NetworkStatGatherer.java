@@ -104,7 +104,7 @@ public class NetworkStatGatherer
 
     public static PlayerPacketDataEntry getDataForPlayer(final ServerPlayer playerEntity, final int minutes)
     {
-        final String id = playerEntity.connection.connection.channel().remoteAddress().toString();
+        final String id = playerEntity.connection.getRemoteAddress().toString();
 
         final Map<String, PacketData> gatherMap = new HashMap<>();
 
@@ -391,7 +391,6 @@ public class NetworkStatGatherer
     /**
      * Outgoing summary for client
      *
-     * @param source
      */
     public static void reportClientStatsSummary(final Player playerEntity, final int minutes, final int startIndex)
     {
