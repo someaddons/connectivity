@@ -1,15 +1,11 @@
 package com.connectivity.mixin;
 
 import com.connectivity.Connectivity;
-import com.connectivity.networkstats.IPacketDataSetter;
 import com.google.common.base.Charsets;
-import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.login.ClientboundCustomQueryPacket;
 import net.minecraft.network.protocol.login.ServerboundCustomQueryPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -85,27 +81,6 @@ public class ConnectionProtocolMixin<T extends PacketListener>
                 FriendlyByteBuf data = new FriendlyByteBuf(buf.readBytes(bytes));
 
                 return (P) new ClientboundCustomQueryPacket(transactionId, identifier, data);
-            };
-        }
-
-        if (!FabricLoader.getInstance().isModLoaded("imm_ptl_core") && pClass == ClientboundCustomPayloadPacket.class && Connectivity.config.getCommonConfig().disableLoginLimits)
-        {
-            byteBufPFunction = buf ->
-            {
-                final ResourceLocation identifier = buf.readResourceLocation();
-                final int bytes = buf.readableBytes();
-                if (!(bytes >= 0 && bytes <= 1048576))
-                {
-                    if (Connectivity.config.getCommonConfig().debugPrintMessages)
-                    {
-                        reportData(pClass, buf);
-                    }
-                }
-                final FriendlyByteBuf data = new FriendlyByteBuf(buf.readBytes(bytes));
-
-                ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(identifier, new FriendlyByteBuf(Unpooled.buffer()));
-                ((IPacketDataSetter) packet).setData(data);
-                return (P) packet;
             };
         }
 
