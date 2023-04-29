@@ -18,7 +18,7 @@ public class MixinConfig implements IMixinConfigPlugin
     @Override
     public void onLoad(final String mixinPackage)
     {
-
+        disabledMixins.put(basePath + "ClientBoundCustomPayloadPacketLMixin", () -> FabricLoader.getInstance().isModLoaded("xlpackets"));
     }
 
     @Override
@@ -44,10 +44,7 @@ public class MixinConfig implements IMixinConfigPlugin
 
         if (disabledMixins.containsKey(mixinClassName))
         {
-            if (disabledMixins.get(mixinClassName).get())
-            {
-                return false;
-            }
+            return !disabledMixins.get(mixinClassName).get();
         }
 
         return true;

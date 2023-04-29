@@ -32,7 +32,7 @@ public class CommonConfiguration
         root.add("disablePacketLimits", entry2);
 
         final JsonObject entry3 = new JsonObject();
-        entry3.addProperty("desc:", "If enabled all messages exceeding normal limits will be printed to log. default:false");
+        entry3.addProperty("desc:", "Enable addition debug logging for networking errors. default:false");
         entry3.addProperty("debugPrintMessages", debugPrintMessages);
         root.add("debugPrintMessages", entry3);
 
