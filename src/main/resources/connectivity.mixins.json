@@ -12,7 +12,6 @@
     "NetworkSystemMixin",
     "ResourceLocationExceptionMixin",
     "ServerLoginNetHandlerMixin",
-    "ServerNetworkingImplMixin",
     "ServerPlayNetHandlerMixin",
     "SMultiBlockChangePacketMixin",
     "SMultiBlockChangePacketMixinPolyCompat",
