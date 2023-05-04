@@ -6,10 +6,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(ClientboundCustomPayloadPacket.class)
+@Mixin(value = ClientboundCustomPayloadPacket.class, priority = 1)
 public class ClientboundCustomPayloadPacketMixin
 {
-    @ModifyConstant(method = "<init>*", constant = @Constant(intValue = 1048576))
+    @ModifyConstant(method = "<init>*", constant = @Constant(intValue = 1048576), require = 0)
     private int modifyLimit(final int constant)
     {
         if (!Connectivity.config.getCommonConfig().disableLoginLimits)
