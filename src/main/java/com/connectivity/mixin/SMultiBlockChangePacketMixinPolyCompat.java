@@ -40,15 +40,10 @@ public abstract class SMultiBlockChangePacketMixinPolyCompat
     @Final
     private BlockState[] states;
 
-    @Shadow
-    @Final
-    private boolean suppressLightUpdates;
-
     @Overwrite
     public void write(FriendlyByteBuf buf) throws IOException
     {
         buf.writeLong(this.sectionPos.asLong());
-        buf.writeBoolean(this.suppressLightUpdates);
         buf.writeVarInt(this.positions.length);
 
         for (int i = 0; i < this.positions.length; ++i)

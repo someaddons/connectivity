@@ -256,7 +256,7 @@ public class NetworkStatGatherer
         }
         playerData.sort(Comparator.<PlayerPacketDataEntry>comparingLong(data -> data.totalBytes).reversed());
 
-        source.sendSuccess(Component.literal("Network players summary of last " + minutes + " minutes."), false);
+        source.sendSystemMessage(Component.literal("Network players summary of last " + minutes + " minutes."));
 
         long byteSum = 0;
         for (final PlayerPacketDataEntry packetData : playerData)
@@ -268,19 +268,19 @@ public class NetworkStatGatherer
         for (i = startIndex; i < startIndex + 5 && i < playerData.size(); i++)
         {
             final PlayerPacketDataEntry playerPacketDataEntry = playerData.get(i);
-            source.sendSuccess(
+            source.sendSystemMessage(
               Component.literal(percent.format(((double) (playerPacketDataEntry.totalBytes) / (byteSum)) * 100) + "% ")
                 .append(Component.literal(playerPacketDataEntry.playerEntity.getName().getString() + " ")).setStyle(GREEN_BOLD)
                 .append(Component.literal("r: " + percent.format(playerPacketDataEntry.totalRate) + "kb/s ").setStyle(BLUE))
                 .append(Component.literal("total sent: " + percent.format((double) playerPacketDataEntry.totalBytes / 1000d) + "kb").setStyle(RED))
-              , false);
+              );
         }
 
         if (i + 1 < playerData.size())
         {
-            source.sendSuccess(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
+            source.sendSystemMessage(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
               .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                String.format(NETWORKSTATS_PLAYER_SUMMARY_COMMAND, minutes, i)))), false);
+                String.format(NETWORKSTATS_PLAYER_SUMMARY_COMMAND, minutes, i)))));
         }
     }
 
@@ -299,7 +299,7 @@ public class NetworkStatGatherer
         final Style RED = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
         final Style GOLD = Style.EMPTY.withBold(true).withColor(TextColor.fromLegacyFormat(ChatFormatting.GOLD));
 
-        source.sendSuccess(Component.literal("Network packet summary of last " + minutes + " minutes."), false);
+        source.sendSystemMessage(Component.literal("Network packet summary of last " + minutes + " minutes."));
 
         long totalBytes = 0;
         double totalRate = 0;
@@ -308,26 +308,26 @@ public class NetworkStatGatherer
             totalBytes += packetData.totalPacketBytes;
             totalRate += packetData.rate;
         }
-        source.sendSuccess(Component.literal("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD), false);
+        source.sendSystemMessage(Component.literal("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD));
 
         int i = 0;
         for (i = startIndex; i < startIndex + 5 && i < data.size(); i++)
         {
             final PacketData packetData = data.get(i);
-            source.sendSuccess(
+            source.sendSystemMessage(
               Component.literal(percent.format(((double) (packetData.totalPacketBytes) / (totalBytes)) * 100) + "% ")
                 .append(Component.literal(packetData.packetName + " ")).setStyle(GREEN_BOLD)
                 .append(Component.literal("r: " + percent.format(packetData.rate) + "kb/s ").setStyle(BLUE))
                 .append(Component.literal("count:" + packetData.packetCount + " ").setStyle(YELLOW))
                 .append(Component.literal("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kb").setStyle(RED))
-              , false);
+              );
         }
 
         if (i + 1 < data.size())
         {
-            source.sendSuccess(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
+            source.sendSystemMessage(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
               .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                String.format(NETWORKSTATS_SUMMARY_COMMAND, minutes, i)))), false);
+                String.format(NETWORKSTATS_SUMMARY_COMMAND, minutes, i)))));
         }
     }
 
@@ -340,7 +340,7 @@ public class NetworkStatGatherer
     {
         if (playerEntity == null)
         {
-            source.sendSuccess(Component.literal("Player not found"), true);
+            source.sendSystemMessage(Component.literal("Player not found"));
             return;
         }
 
@@ -353,7 +353,7 @@ public class NetworkStatGatherer
         final Style RED = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
         final Style GOLD = Style.EMPTY.withBold(true).withColor(TextColor.fromLegacyFormat(ChatFormatting.GOLD));
 
-        source.sendSuccess(Component.literal("Network packet summary for " + playerEntity.getName().getString() + " of last " + minutes + " minutes."), false);
+        source.sendSystemMessage(Component.literal("Network packet summary for " + playerEntity.getName().getString() + " of last " + minutes + " minutes."));
 
         long totalBytes = 0;
         double totalRate = 0;
@@ -362,29 +362,29 @@ public class NetworkStatGatherer
             totalBytes += packetData.totalPacketBytes;
             totalRate += packetData.rate;
         }
-        source.sendSuccess(Component.literal("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD), false);
+        source.sendSystemMessage(Component.literal("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD));
 
         int i = 0;
         for (i = startIndex; i < startIndex + 5 && i < data.size(); i++)
         {
             final PacketData packetData = data.get(i);
-            source.sendSuccess(
+            source.sendSystemMessage(
               Component.literal(percent.format(((double) (packetData.totalPacketBytes) / (totalBytes)) * 100) + "% ")
                 .append(Component.literal(packetData.packetName + " ")).setStyle(GREEN_BOLD)
                 .append(Component.literal("r: " + percent.format(packetData.rate) + "kb/s ").setStyle(BLUE))
                 .append(Component.literal("count:" + packetData.packetCount + " ").setStyle(YELLOW))
                 .append(Component.literal("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kb").setStyle(RED))
-              , false);
+              );
         }
 
         if (i + 1 < data.size())
         {
-            source.sendSuccess(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
+            source.sendSystemMessage(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
               .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                 String.format(NETWORKSTATS_SINGLE_PLAYER_COMMAND,
                   playerEntity.getName().getString(),
                   minutes,
-                  i)))), false);
+                  i)))));
         }
     }
 
