@@ -1,6 +1,7 @@
 package com.connectivity.mixin.networkstats;
 
 import com.connectivity.Connectivity;
+import com.connectivity.logging.PacketLogging;
 import com.connectivity.networkstats.INamedPacket;
 import com.connectivity.networkstats.NetworkStatGatherer;
 import io.netty.buffer.ByteBuf;
@@ -30,7 +31,7 @@ public class NettyPacketEncoderMixin
         NetworkStatGatherer.add(channelHandlerContext.channel().remoteAddress().toString(), name, packetBuffer.writerIndex());
     }
 
-    @Inject(method = "encode(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;Lio/netty/buffer/ByteBuf;)V", at = @At(value = "INVOKE", target = "Ljava/io/IOException;<init>(Ljava/lang/String;)V"))
+    @Inject(method = "encode(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;Lio/netty/buffer/ByteBuf;)V", at = @At(value = "INVOKE", target = "Ljava/io/IOException;<init>(Ljava/lang/String;)V", remap = false))
     public void onNoPacket(final ChannelHandlerContext j, final Packet<?> packet, final ByteBuf friendlybytebuf, final CallbackInfo ci)
     {
         String name = packet.getClass().getSimpleName();
@@ -43,5 +44,12 @@ public class NettyPacketEncoderMixin
         }
 
         Connectivity.LOGGER.warn("Packet not registered: " + name);
+        PacketLogging.logPacket(packet);
+    }
+
+    @Inject(method = "encode(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;Lio/netty/buffer/ByteBuf;)V", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V", remap = false))
+    private void onError(final ChannelHandlerContext p_130545_, final Packet<?> packet, final ByteBuf p_130547_, final CallbackInfo ci)
+    {
+        PacketLogging.logPacket(packet, "caused an error above, printing name & data");
     }
 }
