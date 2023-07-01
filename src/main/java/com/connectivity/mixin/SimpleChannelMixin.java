@@ -1,6 +1,7 @@
 package com.connectivity.mixin;
 
 import com.connectivity.Connectivity;
+import com.connectivity.logging.PacketLogging;
 import com.connectivity.networkstats.INamedPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
@@ -23,7 +24,15 @@ public class SimpleChannelMixin
     {
         if (cir.getReturnValue().getKey().writerIndex() > 1048576 && Connectivity.config.getCommonConfig().debugPrintMessages.get())
         {
-            Connectivity.LOGGER.warn("Trying to send too large packet " + msg.getClass().getSimpleName() + " with size: " + cir.getReturnValue().getKey().writerIndex() + " bytes");
+            if (msg instanceof Packet)
+            {
+                PacketLogging.logPacket((Packet<?>) msg, "is sending too much data: " + cir.getReturnValue().getKey().writerIndex() + " bytes, max 1048576");
+            }
+            else
+            {
+                Connectivity.LOGGER.warn(
+                  "Packet " + msg.getClass().getSimpleName() + " is sending too much data: " + cir.getReturnValue().getKey().writerIndex() + " bytes, max 1048576");
+            }
         }
     }
 

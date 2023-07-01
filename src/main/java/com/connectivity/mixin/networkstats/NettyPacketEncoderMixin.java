@@ -1,6 +1,7 @@
 package com.connectivity.mixin.networkstats;
 
 import com.connectivity.Connectivity;
+import com.connectivity.logging.PacketLogging;
 import com.connectivity.networkstats.INamedPacket;
 import com.connectivity.networkstats.NetworkStatGatherer;
 import io.netty.buffer.ByteBuf;
@@ -43,5 +44,6 @@ public class NettyPacketEncoderMixin
         }
 
         Connectivity.LOGGER.warn("Packet not registered: " + name);
+        PacketLogging.logPacket(packet);
     }
 }
