@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
  */
 public class NetworkSystemMixin
 {
-    @Redirect(method = "initChannel", at = @At(value = "NEW", target = "io/netty/handler/timeout/ReadTimeoutHandler"), require = 0, expect = 0)
+    @Redirect(method = "initChannel", at = @At(value = "NEW", target = "io/netty/handler/timeout/ReadTimeoutHandler", remap = false), require = 0, expect = 0)
     private ReadTimeoutHandler create(int time)
     {
         return new ReadTimeoutHandler((int) (Connectivity.config.getCommonConfig().logintimeout * 0.05));

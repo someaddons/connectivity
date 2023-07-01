@@ -10,6 +10,7 @@
     "NettyCompressionDecoderMixin",
     "NetworkManagerMixin",
     "NetworkSystemMixin",
+    "AdvancedPacketErrorLogging",
     "ResourceLocationExceptionMixin",
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
