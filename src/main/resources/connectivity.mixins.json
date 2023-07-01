@@ -11,6 +11,7 @@
     "NetworkManagerMixin",
     "NetworkRegistryMixin",
     "NetworkSystemMixin",
+    "AdvancedPacketErrorLogging",
     "ResourceLocationExceptionMixin",
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
