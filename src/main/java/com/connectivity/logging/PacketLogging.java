@@ -6,18 +6,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.entity.EntityType;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
-
-import static com.google.gson.ReflectionAccessFilter.BLOCK_INACCESSIBLE_JAVA;
 
 public class PacketLogging
 {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
-      .addReflectionAccessFilter(BLOCK_INACCESSIBLE_JAVA)
       .disableHtmlEscaping()
       .registerTypeHierarchyAdapter(Optional.class, new GsonOptionalTypeHandler<>())
+      .registerTypeHierarchyAdapter(EntityType.class, new EntityTypeHandler<>())
       .registerTypeHierarchyAdapter(FriendlyByteBuf.class, new ByteBufferTypeHandler<>())
       .create();
 
@@ -37,7 +35,7 @@ public class PacketLogging
             }
         }
 
-        Connectivity.LOGGER.warn("Packet:" + name+ " " + warning);
+        Connectivity.LOGGER.warn("Packet:" + name + " " + warning);
 
         try
         {
@@ -45,7 +43,7 @@ public class PacketLogging
         }
         catch (Throwable e)
         {
-            Connectivity.LOGGER.warn("Failed to print data for packet");
+            Connectivity.LOGGER.warn("Failed to print data for packet", e);
         }
     }
 }

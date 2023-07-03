@@ -46,4 +46,10 @@ public class NettyPacketEncoderMixin
         Connectivity.LOGGER.warn("Packet not registered: " + name);
         PacketLogging.logPacket(packet);
     }
+
+    @Inject(method = "encode(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;Lio/netty/buffer/ByteBuf;)V", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V"))
+    private void onError(final ChannelHandlerContext p_130545_, final Packet<?> packet, final ByteBuf p_130547_, final CallbackInfo ci)
+    {
+        PacketLogging.logPacket(packet, "caused an error above, printing name & data");
+    }
 }
