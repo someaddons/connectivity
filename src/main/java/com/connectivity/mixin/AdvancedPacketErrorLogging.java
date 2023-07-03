@@ -1,5 +1,6 @@
 package com.connectivity.mixin;
 
+import com.connectivity.Connectivity;
 import com.connectivity.logging.PacketLogging;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketSendListener;
@@ -11,6 +12,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+/**
+ * Bit crude mixin, to accomodate for krypton's overwrite
+ */
 @Mixin(value = Connection.class, priority = 5)
 public abstract class AdvancedPacketErrorLogging
 {
@@ -18,14 +22,38 @@ public abstract class AdvancedPacketErrorLogging
     protected abstract void sendPacket(final Packet<?> p_129521_, @Nullable final PacketSendListener p_243246_);
 
     @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V"), require = 0)
-    private void connectivity$logErrorFor(final Connection instance, final Packet<?> packet, final PacketSendListener listener)
+    private void connectivity$logErrorFor(final Connection instance, final Packet<?> packet, PacketSendListener listener)
     {
+        if (listener == null && Connectivity.config.getCommonConfig().debugPrintMessages.get())
+        {
+            listener = new PacketSendListener()
+            {
+                public Packet<?> onFailure()
+                {
+                    PacketLogging.logPacket(packet, "caused an error above, printing name & data");
+                    return null;
+                }
+            };
+        }
+
         connectivity$wrapSend(packet, listener);
     }
 
     @Redirect(method = "flushQueue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V"), require = 0)
-    private void connectivity$logErrorForFlush(final Connection instance, final Packet<?> packet, final PacketSendListener listener)
+    private void connectivity$logErrorForFlush(final Connection instance, final Packet<?> packet, PacketSendListener listener)
     {
+        if (listener == null && Connectivity.config.getCommonConfig().debugPrintMessages.get())
+        {
+            listener = new PacketSendListener()
+            {
+                public Packet<?> onFailure()
+                {
+                    PacketLogging.logPacket(packet, "caused an error above, printing name & data");
+                    return null;
+                }
+            };
+        }
+
         connectivity$wrapSend(packet, listener);
     }
 
@@ -38,8 +66,7 @@ public abstract class AdvancedPacketErrorLogging
         }
         catch (Throwable t)
         {
-            PacketLogging.logPacket(packet, "threw an error:"+t.getLocalizedMessage());
-
+            PacketLogging.logPacket(packet, "threw an error:" + t.getLocalizedMessage());
             throw t;
         }
     }

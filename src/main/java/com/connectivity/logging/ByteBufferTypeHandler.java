@@ -1,5 +1,6 @@
 package com.connectivity.logging;
 
+import com.connectivity.Connectivity;
 import com.google.common.base.Charsets;
 import com.google.gson.*;
 import net.minecraft.network.FriendlyByteBuf;
@@ -20,10 +21,19 @@ public class ByteBufferTypeHandler<T>
     @Override
     public JsonElement serialize(FriendlyByteBuf src, Type typeOfSrc, JsonSerializationContext context)
     {
-        src.resetReaderIndex();
-        final JsonElement element = context.serialize(src.toString(Charsets.UTF_8));
         final JsonArray result = new JsonArray();
-        result.add(element);
+        if (!Connectivity.config.getCommonConfig().debugPrintMessages.get())
+        {
+            final JsonElement element = context.serialize("Enable debugPrintMessages to print this");
+            result.add(element);
+        }
+        else
+        {
+            src.resetReaderIndex();
+            final JsonElement element = context.serialize(src.toString(Charsets.UTF_8));
+            result.add(element);
+        }
+
         return result;
     }
 }
