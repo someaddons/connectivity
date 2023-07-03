@@ -10,10 +10,13 @@ import net.minecraft.world.entity.EntityType;
 
 import java.util.Optional;
 
+import static com.google.gson.ReflectionAccessFilter.BLOCK_INACCESSIBLE_JAVA;
+
 public class PacketLogging
 {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
       .disableHtmlEscaping()
+      .addReflectionAccessFilter(BLOCK_INACCESSIBLE_JAVA)
       .registerTypeHierarchyAdapter(Optional.class, new GsonOptionalTypeHandler<>())
       .registerTypeHierarchyAdapter(EntityType.class, new EntityTypeHandler<>())
       .registerTypeHierarchyAdapter(FriendlyByteBuf.class, new ByteBufferTypeHandler<>())
