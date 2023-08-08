@@ -29,7 +29,7 @@ public class NetworkStatGatherer
     /**
      * The maximum of minute data saved
      */
-    private static final int recordingDuration = Connectivity.config.getCommonConfig().packetHistoryMinutes.get();
+    private static final int recordingDuration = Connectivity.config.getCommonConfig().packetHistoryMinutes;
 
     /**
      * Data snapshots saved every 1 minute

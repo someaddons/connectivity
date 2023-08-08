@@ -52,3 +52,9 @@ Lightweight mod which solves connection and packet size issues.
     versionRange="[1.19,)"
     ordering="NONE"
     side="BOTH"
+[[dependencies.connectivity]]
+    modId="cupboard"
+    mandatory=true
+    versionRange="[1.5,)"
+    ordering="NONE"
+    side="BOTH"

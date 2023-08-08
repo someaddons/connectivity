@@ -22,7 +22,7 @@ public class ByteBufferTypeHandler<T>
     public JsonElement serialize(FriendlyByteBuf src, Type typeOfSrc, JsonSerializationContext context)
     {
         final JsonArray result = new JsonArray();
-        if (!Connectivity.config.getCommonConfig().debugPrintMessages.get())
+        if (!Connectivity.config.getCommonConfig().debugPrintMessages)
         {
             final JsonElement element = context.serialize("Enable debugPrintMessages to print this");
             result.add(element);

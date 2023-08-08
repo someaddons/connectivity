@@ -15,6 +15,6 @@ public class NetworkSystemMixin
     @Redirect(method = "initChannel", at = @At(value = "NEW", target = "io/netty/handler/timeout/ReadTimeoutHandler", remap = false), require = 0, expect = 0)
     private ReadTimeoutHandler create(int time)
     {
-        return new ReadTimeoutHandler((int) (Connectivity.config.getCommonConfig().logintimeout.get() * 0.05));
+        return new ReadTimeoutHandler((int) (Connectivity.config.getCommonConfig().logintimeout * 0.05));
     }
 }

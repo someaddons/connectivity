@@ -15,6 +15,6 @@ public class ServerPlayNetHandlerMixin
     @ModifyConstant(method = "tick", constant = @Constant(longValue = 15000L, ordinal = 0), require = 0, expect = 0)
     public long playTimeout(long old)
     {
-        return Connectivity.config.getCommonConfig().disconnectTimeout.get() * 1000;
+        return Connectivity.config.getCommonConfig().disconnectTimeout * 1000;
     }
 }

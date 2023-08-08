@@ -24,7 +24,7 @@ public abstract class AdvancedPacketErrorLogging
     @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V"), require = 0)
     private void connectivity$logErrorFor(final Connection instance, final Packet<?> packet, PacketSendListener listener)
     {
-        if (listener == null && Connectivity.config.getCommonConfig().debugPrintMessages.get())
+        if (listener == null && Connectivity.config.getCommonConfig().debugPrintMessages)
         {
             listener = new PacketSendListener()
             {
@@ -42,7 +42,7 @@ public abstract class AdvancedPacketErrorLogging
     @Redirect(method = "flushQueue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V"), require = 0)
     private void connectivity$logErrorForFlush(final Connection instance, final Packet<?> packet, PacketSendListener listener)
     {
-        if (listener == null && Connectivity.config.getCommonConfig().debugPrintMessages.get())
+        if (listener == null && Connectivity.config.getCommonConfig().debugPrintMessages)
         {
             listener = new PacketSendListener()
             {

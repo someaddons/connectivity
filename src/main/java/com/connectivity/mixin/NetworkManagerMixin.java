@@ -14,7 +14,7 @@ public class NetworkManagerMixin
     @Inject(method = "exceptionCaught", at = @At("HEAD"))
     public void on(final ChannelHandlerContext packet, final Throwable component, final CallbackInfo ci)
     {
-        if (Connectivity.config.getCommonConfig().debugPrintMessages.get())
+        if (Connectivity.config.getCommonConfig().debugPrintMessages)
         {
             Connectivity.LOGGER.warn("Network error for:" + packet.name(), component);
         }

@@ -42,7 +42,7 @@ public class ConnectionProtocolMixin<T extends PacketListener>
       Function<FriendlyByteBuf, P> byteBufPFunction,
       final CallbackInfoReturnable cir)
     {
-        if (pClass == ServerboundCustomQueryPacket.class && Connectivity.config.getCommonConfig().disableLoginLimits.get())
+        if (pClass == ServerboundCustomQueryPacket.class && Connectivity.config.getCommonConfig().disableLoginLimits)
         {
             byteBufPFunction = buf ->
             {
@@ -54,7 +54,7 @@ public class ConnectionProtocolMixin<T extends PacketListener>
 
                     if (bytes < 0 || bytes > 1048576)
                     {
-                        if (Connectivity.config.getCommonConfig().debugPrintMessages.get())
+                        if (Connectivity.config.getCommonConfig().debugPrintMessages)
                         {
                             reportData(pClass, buf);
                         }
@@ -67,7 +67,7 @@ public class ConnectionProtocolMixin<T extends PacketListener>
             };
         }
 
-        if (pClass == ClientboundCustomQueryPacket.class && Connectivity.config.getCommonConfig().disableLoginLimits.get())
+        if (pClass == ClientboundCustomQueryPacket.class && Connectivity.config.getCommonConfig().disableLoginLimits)
         {
             byteBufPFunction = buf ->
             {
@@ -76,7 +76,7 @@ public class ConnectionProtocolMixin<T extends PacketListener>
                 final int bytes = buf.readableBytes();
                 if (!(bytes >= 0 && bytes <= 1048576))
                 {
-                    if (Connectivity.config.getCommonConfig().debugPrintMessages.get())
+                    if (Connectivity.config.getCommonConfig().debugPrintMessages)
                     {
                         reportData(pClass, buf);
                     }

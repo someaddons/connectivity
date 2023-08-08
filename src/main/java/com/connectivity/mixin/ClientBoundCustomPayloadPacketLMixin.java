@@ -12,7 +12,7 @@ public class ClientBoundCustomPayloadPacketLMixin
     @ModifyConstant(method = "<init>*", constant = @Constant(intValue = 1048576), require = 0)
     private int modifyLimit(final int constant)
     {
-        if (!Connectivity.config.getCommonConfig().disableLoginLimits.get())
+        if (!Connectivity.config.getCommonConfig().disableLoginLimits)
         {
             return constant;
         }
