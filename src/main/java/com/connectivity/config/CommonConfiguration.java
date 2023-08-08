@@ -1,9 +1,10 @@
 package com.connectivity.config;
 
 import com.connectivity.Connectivity;
+import com.cupboard.config.ICommonConfig;
 import com.google.gson.JsonObject;
 
-public class CommonConfiguration
+public class CommonConfiguration implements ICommonConfig
 {
     public boolean disableLoginLimits                = true;
     public boolean disablePacketLimits               = true;
@@ -13,7 +14,7 @@ public class CommonConfiguration
     public int     packetHistoryMinutes              = 5;
     public int     disconnectTimeout                 = 60;
 
-    protected CommonConfiguration()
+    public CommonConfiguration()
     {
     }
 
@@ -62,25 +63,12 @@ public class CommonConfiguration
 
     public void deserialize(JsonObject data)
     {
-        if (data == null)
-        {
-            Connectivity.LOGGER.error("Config file was empty!");
-            return;
-        }
-
-        try
-        {
-            disableLoginLimits = data.get("disableLoginLimits").getAsJsonObject().get("disableLoginLimits").getAsBoolean();
-            disablePacketLimits = data.get("disablePacketLimits").getAsJsonObject().get("disablePacketLimits").getAsBoolean();
-            debugPrintMessages = data.get("debugPrintMessages").getAsJsonObject().get("debugPrintMessages").getAsBoolean();
-            showFullResourceLocationException = data.get("showFullResourceLocationException").getAsJsonObject().get("showFullResourceLocationException").getAsBoolean();
-            logintimeout = data.get("logintimeout").getAsJsonObject().get("logintimeout").getAsInt();
-            disconnectTimeout = data.get("disconnectTimeout").getAsJsonObject().get("disconnectTimeout").getAsInt();
-            packetHistoryMinutes = data.get("packetHistoryMinutes").getAsJsonObject().get("packetHistoryMinutes").getAsInt();
-        }
-        catch (Exception e)
-        {
-            Connectivity.LOGGER.error("Could not parse config file", e);
-        }
+        disableLoginLimits = data.get("disableLoginLimits").getAsJsonObject().get("disableLoginLimits").getAsBoolean();
+        disablePacketLimits = data.get("disablePacketLimits").getAsJsonObject().get("disablePacketLimits").getAsBoolean();
+        debugPrintMessages = data.get("debugPrintMessages").getAsJsonObject().get("debugPrintMessages").getAsBoolean();
+        showFullResourceLocationException = data.get("showFullResourceLocationException").getAsJsonObject().get("showFullResourceLocationException").getAsBoolean();
+        logintimeout = data.get("logintimeout").getAsJsonObject().get("logintimeout").getAsInt();
+        disconnectTimeout = data.get("disconnectTimeout").getAsJsonObject().get("disconnectTimeout").getAsInt();
+        packetHistoryMinutes = data.get("packetHistoryMinutes").getAsJsonObject().get("packetHistoryMinutes").getAsInt();
     }
 }
