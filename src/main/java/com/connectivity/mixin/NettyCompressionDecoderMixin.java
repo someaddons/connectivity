@@ -53,7 +53,7 @@ public abstract class NettyCompressionDecoderMixin extends ByteToMessageDecoder
                 if (i < this.threshold)
                 {
                     printDebug(decoded);
-                    if (!Connectivity.config.getCommonConfig().disablePacketLimits.get())
+                    if (!Connectivity.config.getCommonConfig().disablePacketLimits)
                     {
                         throw new DecoderException("Badly compressed packet - size of " + i + " is below server threshold of " + this.threshold);
                     }
@@ -62,7 +62,7 @@ public abstract class NettyCompressionDecoderMixin extends ByteToMessageDecoder
                 if (i > 2097152)
                 {
                     printDebug(decoded);
-                    if (!Connectivity.config.getCommonConfig().disablePacketLimits.get())
+                    if (!Connectivity.config.getCommonConfig().disablePacketLimits)
                     {
                         throw new DecoderException("Badly compressed packet - size of " + i + " is larger than protocol maximum of " + 2097152);
                     }
@@ -73,7 +73,7 @@ public abstract class NettyCompressionDecoderMixin extends ByteToMessageDecoder
 
     private void printDebug(List<Object> decodingResults)
     {
-        if (!Connectivity.config.getCommonConfig().debugPrintMessages.get())
+        if (!Connectivity.config.getCommonConfig().debugPrintMessages)
         {
             return;
         }

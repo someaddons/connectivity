@@ -26,7 +26,7 @@ public class ClientEventHandler
             {
                 try
                 {
-                    minutes = Math.min(Integer.parseInt(split[2]), Connectivity.config.getCommonConfig().packetHistoryMinutes.get());
+                    minutes = Math.min(Integer.parseInt(split[2]), Connectivity.config.getCommonConfig().packetHistoryMinutes);
                 }
                 catch (Exception e)
                 {

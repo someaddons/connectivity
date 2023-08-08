@@ -4,9 +4,10 @@ import com.connectivity.command.CommandNetworkStatsClientFake;
 import com.connectivity.command.CommandNetworkStatsPlayers;
 import com.connectivity.command.CommandNetworkStatsSinglePlayer;
 import com.connectivity.command.CommandNetworkStatsTotal;
-import com.connectivity.config.Configuration;
+import com.connectivity.config.CommonConfiguration;
 import com.connectivity.event.ClientEventHandler;
 import com.connectivity.event.EventHandler;
+import com.cupboard.config.CupboardConfig;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -25,8 +26,8 @@ public class Connectivity
 {
     public static final String MODID = "connectivity";
 
-    public static final Logger        LOGGER = LogManager.getLogger();
-    public static       Configuration config = new Configuration();
+    public static final Logger                              LOGGER = LogManager.getLogger();
+    public static       CupboardConfig<CommonConfiguration> config = new CupboardConfig<>(MODID, new CommonConfiguration());
 
     public Connectivity()
     {

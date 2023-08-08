@@ -22,7 +22,7 @@ public class SimpleChannelMixin
     @Inject(method = "toBuffer", at = @At("RETURN"), remap = false)
     private <MSG> void toBufferWarning(final MSG msg, final CallbackInfoReturnable<Pair<FriendlyByteBuf, Integer>> cir)
     {
-        if (cir.getReturnValue().getKey().writerIndex() > 1048576 && Connectivity.config.getCommonConfig().debugPrintMessages.get())
+        if (cir.getReturnValue().getKey().writerIndex() > 1048576 && Connectivity.config.getCommonConfig().debugPrintMessages)
         {
             if (msg instanceof Packet)
             {
