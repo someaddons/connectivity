@@ -18,7 +18,7 @@ public class MixinConfig implements IMixinConfigPlugin
     @Override
     public void onLoad(final String mixinPackage)
     {
-        disabledMixins.put(basePath + "ClientBoundCustomPayloadPacketLMixin", () -> FabricLoader.getInstance().isModLoaded("xlpackets"));
+        //disabledMixins.put(basePath + "ClientBoundCustomPayloadPacketLMixin", () -> FabricLoader.getInstance().isModLoaded("xlpackets"));
     }
 
     @Override

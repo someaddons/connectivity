@@ -19,10 +19,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public abstract class AdvancedPacketErrorLogging
 {
     @Shadow
-    protected abstract void sendPacket(final Packet<?> p_129521_, @Nullable final PacketSendListener p_243246_);
+    protected abstract void sendPacket(final Packet<?> p_129521_, @Nullable final PacketSendListener p_243246_, boolean bl);
 
-    @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V"), require = 0)
-    private void connectivity$logErrorFor(final Connection instance, final Packet<?> packet, PacketSendListener listener)
+    @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;Z)V"), require = 0)
+    private void connectivity$logErrorFor(final Connection instance, final Packet<?> packet, PacketSendListener listener, boolean bl)
     {
         if (listener == null && Connectivity.config.getCommonConfig().debugPrintMessages)
         {
@@ -36,33 +36,15 @@ public abstract class AdvancedPacketErrorLogging
             };
         }
 
-        connectivity$wrapSend(packet, listener);
-    }
-
-    @Redirect(method = "flushQueue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V"), require = 0)
-    private void connectivity$logErrorForFlush(final Connection instance, final Packet<?> packet, PacketSendListener listener)
-    {
-        if (listener == null && Connectivity.config.getCommonConfig().debugPrintMessages)
-        {
-            listener = new PacketSendListener()
-            {
-                public Packet<?> onFailure()
-                {
-                    PacketLogging.logPacket(packet, "caused an error above, printing name & data");
-                    return null;
-                }
-            };
-        }
-
-        connectivity$wrapSend(packet, listener);
+        connectivity$wrapSend(packet, listener, bl);
     }
 
     @Unique
-    private void connectivity$wrapSend(final Packet<?> packet, final PacketSendListener listener)
+    private void connectivity$wrapSend(final Packet<?> packet, final PacketSendListener listener, boolean bl)
     {
         try
         {
-            sendPacket(packet, listener);
+            sendPacket(packet, listener, bl);
         }
         catch (Throwable t)
         {

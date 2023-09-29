@@ -28,7 +28,7 @@ public class CommonConfiguration implements ICommonConfig
         root.add("disableLoginLimits", entry);
 
         final JsonObject entry2 = new JsonObject();
-        entry2.addProperty("desc:", "Should play packet size limits be disabled? Error:(Badly compressed packet) default:true");
+        entry2.addProperty("desc:", "Should play packet size limits be disabled? Error:packet too large default:true");
         entry2.addProperty("disablePacketLimits", disablePacketLimits);
         root.add("disablePacketLimits", entry2);
 

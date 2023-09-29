@@ -51,7 +51,7 @@ loom {
     runs {
         client {
             programArg '--username=Dev'
-            programArg '--uuid=123123123123123'
+            programArg '--uuid=395ba0e3-daeb-4818-a6e9-2ef66306362e'
             vmArg '-Dmixin.debug=true'
         }
         server {
