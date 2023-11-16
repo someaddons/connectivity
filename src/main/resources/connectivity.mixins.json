@@ -16,13 +16,16 @@
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
     "SimpleChannelMixin",
-    "SMultiBlockChangePacketMixin",
     "networkstats.CCustomPayloadLoginPacketNameMixin",
     "networkstats.CCustomPayloadPacketNameMixin",
     "networkstats.NettyPacketEncoderMixin",
     "networkstats.SCustomPayloadLoginPacketNameMixin",
     "networkstats.SCustomPayloadPlayPacketNameMixin",
-    "ClientBoundCustomPayloadPacketLMixin"
+    "ClientBoundCustomPayloadPacketLMixin",
+    "compat.MinecoloniesPacketNameMixin",
+    "compat.MinecoloniesNetworkChannelMixin",
+    "compat.StructurizeNetworkChannelMixin",
+    "compat.StructurizePacketNameMixin"
   ],
   "client": [
     "CompoundTagMixin"

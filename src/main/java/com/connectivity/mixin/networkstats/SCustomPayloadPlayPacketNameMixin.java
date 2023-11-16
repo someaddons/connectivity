@@ -1,31 +1,27 @@
 package com.connectivity.mixin.networkstats;
 
-import com.connectivity.networkstats.INamedPacket;
-import net.minecraft.network.FriendlyByteBuf;
+import com.connectivity.networkstats.IWrappedPacket;
 import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientboundCustomPayloadPacket.class)
-public class SCustomPayloadPlayPacketNameMixin implements INamedPacket
+public class SCustomPayloadPlayPacketNameMixin implements IWrappedPacket
 {
-    private String packetName = "";
+    private Object org = null;
 
     @Override
-    public String getName()
+    public Object getOriginalMsg()
     {
-        if (packetName == null)
+        if (org instanceof IWrappedPacket && ((IWrappedPacket) org).getOriginalMsg() != null)
         {
-            return "";
+            return ((IWrappedPacket) org).getOriginalMsg();
         }
-        return packetName;
+        return org;
     }
 
     @Override
-    public void setName(final String name)
+    public void setOrgMsg(final Object name)
     {
-        packetName = name;
+        org = name;
     }
 }

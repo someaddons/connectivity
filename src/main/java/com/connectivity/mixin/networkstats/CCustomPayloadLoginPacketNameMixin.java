@@ -1,27 +1,27 @@
 package com.connectivity.mixin.networkstats;
 
-import com.connectivity.networkstats.INamedPacket;
+import com.connectivity.networkstats.IWrappedPacket;
 import net.minecraft.network.protocol.login.ServerboundCustomQueryPacket;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(ServerboundCustomQueryPacket.class)
-public class CCustomPayloadLoginPacketNameMixin implements INamedPacket
+public class CCustomPayloadLoginPacketNameMixin implements IWrappedPacket
 {
-    private String packetName = "";
+    private Object org = null;
 
     @Override
-    public String getName()
+    public Object getOriginalMsg()
     {
-        if (packetName == null)
+        if (org instanceof IWrappedPacket && ((IWrappedPacket) org).getOriginalMsg() != null)
         {
-            return "";
+            return ((IWrappedPacket) org).getOriginalMsg();
         }
-        return packetName;
+        return org;
     }
 
     @Override
-    public void setName(final String name)
+    public void setOrgMsg(final Object name)
     {
-        packetName = name;
+        org = name;
     }
 }

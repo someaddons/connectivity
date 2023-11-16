@@ -12,6 +12,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import java.nio.channels.ClosedChannelException;
+
 /**
  * Bit crude mixin, to accomodate for krypton's overwrite
  */
@@ -24,36 +26,12 @@ public abstract class AdvancedPacketErrorLogging
     @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V"), require = 0)
     private void connectivity$logErrorFor(final Connection instance, final Packet<?> packet, PacketSendListener listener)
     {
-        if (listener == null && Connectivity.config.getCommonConfig().debugPrintMessages)
-        {
-            listener = new PacketSendListener()
-            {
-                public Packet<?> onFailure()
-                {
-                    PacketLogging.logPacket(packet, "caused an error above, printing name & data");
-                    return null;
-                }
-            };
-        }
-
         connectivity$wrapSend(packet, listener);
     }
 
     @Redirect(method = "flushQueue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V"), require = 0)
     private void connectivity$logErrorForFlush(final Connection instance, final Packet<?> packet, PacketSendListener listener)
     {
-        if (listener == null && Connectivity.config.getCommonConfig().debugPrintMessages)
-        {
-            listener = new PacketSendListener()
-            {
-                public Packet<?> onFailure()
-                {
-                    PacketLogging.logPacket(packet, "caused an error above, printing name & data");
-                    return null;
-                }
-            };
-        }
-
         connectivity$wrapSend(packet, listener);
     }
 
@@ -66,7 +44,10 @@ public abstract class AdvancedPacketErrorLogging
         }
         catch (Throwable t)
         {
-            PacketLogging.logPacket(packet, "threw an error:" + t.getLocalizedMessage());
+            if (!(t instanceof ClosedChannelException))
+            {
+                PacketLogging.logPacket(packet, "threw an error:" + t.getLocalizedMessage());
+            }
             throw t;
         }
     }

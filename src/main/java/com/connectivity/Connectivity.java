@@ -1,9 +1,6 @@
 package com.connectivity;
 
-import com.connectivity.command.CommandNetworkStatsClientFake;
-import com.connectivity.command.CommandNetworkStatsPlayers;
-import com.connectivity.command.CommandNetworkStatsSinglePlayer;
-import com.connectivity.command.CommandNetworkStatsTotal;
+import com.connectivity.command.*;
 import com.connectivity.config.CommonConfiguration;
 import com.connectivity.event.ClientEventHandler;
 import com.connectivity.event.EventHandler;
@@ -11,6 +8,7 @@ import com.cupboard.config.CupboardConfig;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -59,5 +57,6 @@ public class Connectivity
         event.getDispatcher().register(root.then(new CommandNetworkStatsPlayers().build()));
         event.getDispatcher().register(root.then(new CommandNetworkStatsSinglePlayer().build()));
         event.getDispatcher().register(root.then(new CommandNetworkStatsClientFake().build()));
+        event.getDispatcher().register(root.then(new CommandNetworkStatsPrintPacket().build()));
     }
 }

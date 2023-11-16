@@ -9,7 +9,6 @@ import java.util.Optional;
 public class GsonOptionalTypeHandler<T>
   implements JsonSerializer<Optional<T>>, JsonDeserializer<Optional<T>>
 {
-
     @Override
     public Optional<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
       throws JsonParseException

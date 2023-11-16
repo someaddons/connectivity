@@ -2,7 +2,7 @@ package com.connectivity.mixin.networkstats;
 
 import com.connectivity.Connectivity;
 import com.connectivity.logging.PacketLogging;
-import com.connectivity.networkstats.INamedPacket;
+import com.connectivity.networkstats.IWrappedPacket;
 import com.connectivity.networkstats.NetworkStatGatherer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,27 +19,18 @@ public class NettyPacketEncoderMixin
     @Inject(method = "encode", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/Packet;write(Lnet/minecraft/network/FriendlyByteBuf;)V", shift = At.Shift.AFTER))
     private void onEncode(final ChannelHandlerContext channelHandlerContext, final Packet<?> packet, final ByteBuf packetBuffer, final CallbackInfo ci)
     {
-        String name = packet.getClass().getSimpleName();
-        if (packet instanceof INamedPacket)
-        {
-            if (!((INamedPacket) packet).getName().isEmpty())
-            {
-                name = ((INamedPacket) packet).getName();
-            }
-        }
-
-        NetworkStatGatherer.add(channelHandlerContext.channel().remoteAddress().toString(), name, packetBuffer.writerIndex());
+        NetworkStatGatherer.add(channelHandlerContext.channel().remoteAddress().toString(), packet, packetBuffer.writerIndex());
     }
 
     @Inject(method = "encode(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;Lio/netty/buffer/ByteBuf;)V", at = @At(value = "INVOKE", target = "Ljava/io/IOException;<init>(Ljava/lang/String;)V"))
     public void onNoPacket(final ChannelHandlerContext j, final Packet<?> packet, final ByteBuf friendlybytebuf, final CallbackInfo ci)
     {
         String name = packet.getClass().getSimpleName();
-        if (packet instanceof INamedPacket)
+        if (packet instanceof IWrappedPacket)
         {
-            if (!((INamedPacket) packet).getName().isEmpty())
+            if (((IWrappedPacket) packet).getOriginalMsg() != null)
             {
-                name = ((INamedPacket) packet).getName();
+                name = ((IWrappedPacket) packet).getOriginalMsg().getClass().getSimpleName();
             }
         }
 

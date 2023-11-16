@@ -2,7 +2,7 @@ package com.connectivity.mixin;
 
 import com.connectivity.Connectivity;
 import com.connectivity.logging.PacketLogging;
-import com.connectivity.networkstats.INamedPacket;
+import com.connectivity.networkstats.IWrappedPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraftforge.network.NetworkDirection;
@@ -22,16 +22,16 @@ public class SimpleChannelMixin
     @Inject(method = "toBuffer", at = @At("RETURN"), remap = false)
     private <MSG> void toBufferWarning(final MSG msg, final CallbackInfoReturnable<Pair<FriendlyByteBuf, Integer>> cir)
     {
-        if (cir.getReturnValue().getKey().writerIndex() > 1048576 && Connectivity.config.getCommonConfig().debugPrintMessages)
+        if (cir.getReturnValue().getKey().writerIndex() > 8388608 && Connectivity.config.getCommonConfig().debugPrintMessages)
         {
-            if (msg instanceof Packet)
+            if (msg != null)
             {
-                PacketLogging.logPacket((Packet<?>) msg, "is sending too much data: " + cir.getReturnValue().getKey().writerIndex() + " bytes, max 1048576");
+                PacketLogging.logPacket(msg, "is sending too much data: " + cir.getReturnValue().getKey().writerIndex() + " bytes, max 8388608");
             }
             else
             {
                 Connectivity.LOGGER.warn(
-                  "Packet " + msg.getClass().getSimpleName() + " is sending too much data: " + cir.getReturnValue().getKey().writerIndex() + " bytes, max 1048576");
+                  "Packet " + msg.getClass().getSimpleName() + " is sending too much data: " + cir.getReturnValue().getKey().writerIndex() + " bytes, max 8388608");
             }
         }
     }
@@ -41,9 +41,9 @@ public class SimpleChannelMixin
     {
         final Packet vanilla = cir.getReturnValue();
 
-        if (vanilla instanceof INamedPacket)
+        if (vanilla instanceof IWrappedPacket)
         {
-            ((INamedPacket) vanilla).setName(message.getClass().getSimpleName());
+            ((IWrappedPacket) vanilla).setOrgMsg(message);
         }
     }
 }
