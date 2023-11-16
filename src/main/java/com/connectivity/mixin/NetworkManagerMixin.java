@@ -8,13 +8,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.nio.channels.ClosedChannelException;
+
 @Mixin(Connection.class)
 public class NetworkManagerMixin
 {
     @Inject(method = "exceptionCaught", at = @At("HEAD"))
     public void on(final ChannelHandlerContext packet, final Throwable component, final CallbackInfo ci)
     {
-        if (Connectivity.config.getCommonConfig().debugPrintMessages)
+        if (Connectivity.config.getCommonConfig().debugPrintMessages && !(component instanceof ClosedChannelException))
         {
             Connectivity.LOGGER.warn("Network error for:" + packet.name(), component);
         }

@@ -14,8 +14,6 @@
     "ResourceLocationExceptionMixin",
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
-    "SMultiBlockChangePacketMixin",
-    "SMultiBlockChangePacketMixinPolyCompat",
     "networkstats.CCustomPayloadLoginPacketNameMixin",
     "networkstats.CCustomPayloadPacketNameMixin",
     "networkstats.NettyPacketEncoderMixin",

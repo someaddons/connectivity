@@ -1,12 +1,14 @@
 package com.connectivity.networkstats;
 
 import com.connectivity.Connectivity;
+import com.connectivity.logging.PacketLogging;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -47,12 +49,27 @@ public class NetworkStatGatherer
      * Add packet type and size to the given address
      *
      * @param remoteAddress
-     * @param packetName
+     * @param packet
      * @param packetSize
      */
-    public static void add(final String remoteAddress, final String packetName, final int packetSize)
+    public static void add(final String remoteAddress, final Packet packet, final int packetSize)
     {
-        connectionPacketData.computeIfAbsent(remoteAddress, remote -> new ConcurrentHashMap<>()).computeIfAbsent(packetName, name -> new PacketData(name)).add(packetSize);
+        String packetName = packet.getClass().getSimpleName();
+        if (packet instanceof INamedPacket)
+        {
+            if (!((INamedPacket) packet).getName().isEmpty())
+            {
+                packetName = ((INamedPacket) packet).getName();
+            }
+        }
+
+        final PacketData data = connectionPacketData.computeIfAbsent(remoteAddress, remote -> new ConcurrentHashMap<>()).computeIfAbsent(packetName, name -> new PacketData(name));
+        if (data.maxPacketBytes < packetSize)
+        {
+            data.largestPacket = packet;
+        }
+
+        data.add(packetSize);
     }
 
     /**
@@ -83,6 +100,7 @@ public class NetworkStatGatherer
         public       int    maxPacketBytes   = 0;
         public       long   totalPacketBytes = 0;
         public       int    packetCount      = 0;
+        public Object largestPacket = null;
 
         /**
          * throughput in kb/s
@@ -203,6 +221,12 @@ public class NetworkStatGatherer
                 final PacketData existing = dataMap.get(data.packetName);
                 existing.totalPacketBytes += data.totalPacketBytes;
                 existing.packetCount += data.packetCount;
+
+                if (existing.maxPacketBytes < data.maxPacketBytes && data.largestPacket != null)
+                {
+                    existing.largestPacket = data.largestPacket;
+                }
+
                 existing.maxPacketBytes = Math.max(existing.maxPacketBytes, data.maxPacketBytes);
             }
             else
@@ -212,6 +236,7 @@ public class NetworkStatGatherer
                 newData.totalPacketBytes = data.totalPacketBytes;
                 newData.maxPacketBytes = data.maxPacketBytes;
                 newData.packetCount = data.packetCount;
+                newData.largestPacket = data.largestPacket;
                 dataMap.put(data.packetName, newData);
             }
         }
@@ -434,6 +459,45 @@ public class NetworkStatGatherer
             playerEntity.sendSystemMessage(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
               .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                 String.format(NETWORKSTATS_CLIENT_FAKE_COMMAND, minutes, i)))));
+        }
+    }
+
+    /**
+     * Prints all packets fitting the name, only the largest packet is printed
+     * @param source
+     * @param name
+     */
+    public static void printPacketsFittingName(final CommandSourceStack source, final String name)
+    {
+        if (name == null || name.isEmpty())
+        {
+            source.sendSystemMessage(Component.literal("Invalid name"));
+            return;
+        }
+
+        final List<PacketData> packetData = getDataByPacket(Connectivity.config.getCommonConfig().packetHistoryMinutes);
+
+        DecimalFormat percent = new DecimalFormat("########.##");
+        final Style GREEN_BOLD = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.GREEN));
+        final Style BLUE = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.BLUE));
+        final Style YELLOW = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.YELLOW));
+        final Style RED = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
+
+        source.sendSystemMessage(Component.literal("Printing biggest packets fitting " + name+" to latest.log"));
+
+        for (PacketData data: packetData)
+        {
+            if (data.largestPacket != null && data.packetName.toLowerCase().contains(name.toLowerCase()))
+            {
+                source.sendSystemMessage(
+                    Component.literal("Printed: "+ data.packetName + " ").setStyle(GREEN_BOLD)
+                    .append(Component.literal("r: " + percent.format(data.rate) + "kb/s ").setStyle(BLUE))
+                    .append(Component.literal("count:" + data.packetCount + " ").setStyle(YELLOW))
+                    .append(Component.literal("maxSize: " + percent.format((double) data.maxPacketBytes / 1000d) + "kb").setStyle(RED))
+                );
+
+                PacketLogging.logPacket(data.largestPacket,"Print triggered by command");
+            }
         }
     }
 }

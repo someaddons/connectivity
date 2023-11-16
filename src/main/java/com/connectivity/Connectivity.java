@@ -1,9 +1,6 @@
 package com.connectivity;
 
-import com.connectivity.command.CommandNetworkStatsClientFake;
-import com.connectivity.command.CommandNetworkStatsPlayers;
-import com.connectivity.command.CommandNetworkStatsSinglePlayer;
-import com.connectivity.command.CommandNetworkStatsTotal;
+import com.connectivity.command.*;
 import com.connectivity.config.CommonConfiguration;
 import com.connectivity.event.ClientEventHandler;
 import com.connectivity.event.EventHandler;
@@ -39,6 +36,7 @@ public class Connectivity implements ModInitializer, ClientModInitializer
             dispatcher.register(root.then(new CommandNetworkStatsPlayers().build()));
             dispatcher.register(root.then(new CommandNetworkStatsSinglePlayer().build()));
             dispatcher.register(root.then(new CommandNetworkStatsClientFake().build()));
+            dispatcher.register(root.then(new CommandNetworkStatsPrintPacket().build()));
         });
 
         ServerTickEvents.START_SERVER_TICK.register(EventHandler::onServerTick);

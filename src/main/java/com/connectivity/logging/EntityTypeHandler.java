@@ -21,9 +21,6 @@ public class EntityTypeHandler<T>
     @Override
     public JsonElement serialize(EntityType src, Type typeOfSrc, JsonSerializationContext context)
     {
-        final JsonElement element = context.serialize(src.toString());
-        final JsonArray result = new JsonArray();
-        result.add(element);
-        return result;
+        return context.serialize(src.toString());
     }
 }

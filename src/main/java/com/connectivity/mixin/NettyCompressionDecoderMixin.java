@@ -59,12 +59,12 @@ public abstract class NettyCompressionDecoderMixin extends ByteToMessageDecoder
                     }
                 }
 
-                if (i > 2097152)
+                if (i > 8388608)
                 {
                     printDebug(decoded);
                     if (!Connectivity.config.getCommonConfig().disablePacketLimits)
                     {
-                        throw new DecoderException("Badly compressed packet - size of " + i + " is larger than protocol maximum of " + 2097152);
+                        throw new DecoderException("Badly compressed packet - size of " + i + " is larger than protocol maximum of " + 8388608);
                     }
                 }
             }
