@@ -10,6 +10,7 @@ public class CommonConfiguration implements ICommonConfig
     public boolean disablePacketLimits               = true;
     public boolean debugPrintMessages                = false;
     public boolean showFullResourceLocationException = false;
+    public boolean disableChatVerificationDisconnect = true;
     public int     logintimeout                      = 2400;
     public int     packetHistoryMinutes              = 5;
     public int     disconnectTimeout                 = 60;
@@ -32,14 +33,18 @@ public class CommonConfiguration implements ICommonConfig
         entry2.addProperty("disablePacketLimits", disablePacketLimits);
         root.add("disablePacketLimits", entry2);
 
+        final JsonObject entry8 = new JsonObject();
+        entry8.addProperty("desc:", "(Clientside) Disables players disconnecting on chat message verification problems,(enable debugPrintMessages to see the message causing issues). default:true");
+        entry8.addProperty("disableChatVerificationDisconnect", disableChatVerificationDisconnect);
+        root.add("disableChatVerificationDisconnect", entry8);
+
         final JsonObject entry3 = new JsonObject();
         entry3.addProperty("desc:", "Enable addition debug logging for networking errors. default:false");
         entry3.addProperty("debugPrintMessages", debugPrintMessages);
         root.add("debugPrintMessages", entry3);
 
-        //TODO: one in ticks one in seconds?
         final JsonObject entry4 = new JsonObject();
-        entry4.addProperty("desc:", "Set the max login timeout in ticks. 20 ticks = 1 sec, default = 2400 ticks");
+        entry4.addProperty("desc:", "Set the max login timeout in seconds. default = 120");
         entry4.addProperty("logintimeout", logintimeout);
         root.add("logintimeout", entry4);
 
@@ -66,6 +71,7 @@ public class CommonConfiguration implements ICommonConfig
         disableLoginLimits = data.get("disableLoginLimits").getAsJsonObject().get("disableLoginLimits").getAsBoolean();
         disablePacketLimits = data.get("disablePacketLimits").getAsJsonObject().get("disablePacketLimits").getAsBoolean();
         debugPrintMessages = data.get("debugPrintMessages").getAsJsonObject().get("debugPrintMessages").getAsBoolean();
+        disableChatVerificationDisconnect = data.get("disableChatVerificationDisconnect").getAsJsonObject().get("disableChatVerificationDisconnect").getAsBoolean();
         showFullResourceLocationException = data.get("showFullResourceLocationException").getAsJsonObject().get("showFullResourceLocationException").getAsBoolean();
         logintimeout = data.get("logintimeout").getAsJsonObject().get("logintimeout").getAsInt();
         disconnectTimeout = data.get("disconnectTimeout").getAsJsonObject().get("disconnectTimeout").getAsInt();

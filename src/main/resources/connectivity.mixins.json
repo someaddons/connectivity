@@ -21,7 +21,8 @@
     "networkstats.SCustomPayloadPlayPacketNameMixin"
   ],
   "client": [
-    "ScreenMixin"
+    "ScreenMixin",
+    "ClientPacketListenerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

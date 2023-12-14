@@ -15,6 +15,6 @@ public class ServerLoginNetHandlerMixin
     @ModifyConstant(method = "tick", constant = @Constant(intValue = 600, ordinal = 0), require = 0, expect = 0)
     public int loginTimeout(int old)
     {
-        return Connectivity.config.getCommonConfig().logintimeout;
+        return Connectivity.config.getCommonConfig().logintimeout * 20;
     }
 }
