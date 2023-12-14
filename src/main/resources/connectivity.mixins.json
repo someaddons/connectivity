@@ -28,7 +28,8 @@
     "compat.StructurizePacketNameMixin"
   ],
   "client": [
-    "CompoundTagMixin"
+    "CompoundTagMixin",
+    "ClientPacketListenerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
