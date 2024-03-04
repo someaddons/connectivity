@@ -47,7 +47,6 @@ public abstract class NetworkManagerMixin
             {
                 if (counter == 10)
                 {
-                    Connectivity.LOGGER.warn("Killing connection for:" + this + " address:" + this.getRemoteAddress().toString() + " counter:" + counter);
                     disconnect(Component.literal("Forced closure due to network errors"));
                     ServerLifecycleHooks.getCurrentServer()
                       .submit(() -> ServerLifecycleHooks.getCurrentServer().getConnection().getConnections().remove((Connection) (Object) this));
