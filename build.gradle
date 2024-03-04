@@ -103,11 +103,11 @@ dependencies {
 
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
     implementation fg.deobf("curse.maven:cupboard-326652:4750359")
-    implementation fg.deobf("curse.maven:minecolonies-245506:4793115")
-    implementation fg.deobf("curse.maven:struct-298744:4774289")
+    implementation fg.deobf("curse.maven:minecolonies-245506:5110188")
+    implementation fg.deobf("curse.maven:struct-298744:5086912")
     implementation fg.deobf("curse.maven:piston-303278:4631200")
-    implementation fg.deobf("curse.maven:do-527361:4653602")
-    implementation fg.deobf("curse.maven:bo-522992:4584032")
+    implementation fg.deobf("curse.maven:do-527361:5109746")
+    implementation fg.deobf("curse.maven:bo-522992:5064900")
 }
 
 jar {

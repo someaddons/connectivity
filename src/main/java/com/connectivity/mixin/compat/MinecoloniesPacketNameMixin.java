@@ -1,7 +1,7 @@
 package com.connectivity.mixin.compat;
 
 import com.connectivity.networkstats.IWrappedPacket;
-import com.minecolonies.coremod.network.messages.splitting.SplitPacketMessage;
+import com.minecolonies.core.network.messages.splitting.SplitPacketMessage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 

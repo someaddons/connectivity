@@ -2,7 +2,7 @@ package com.connectivity.mixin.compat;
 
 import com.connectivity.networkstats.IWrappedPacket;
 import com.minecolonies.api.network.IMessage;
-import com.minecolonies.coremod.network.NetworkChannel;
+import com.minecolonies.core.network.NetworkChannel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
