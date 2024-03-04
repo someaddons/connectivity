@@ -10,8 +10,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +23,7 @@ public class Connectivity implements ModInitializer, ClientModInitializer
 
     public static final Logger                              LOGGER = LogManager.getLogger();
     public static       CupboardConfig<CommonConfiguration> config = new CupboardConfig<>(MODID, new CommonConfiguration());
+    public static MinecraftServer server = null;
 
     public Connectivity()
     {
@@ -40,6 +43,8 @@ public class Connectivity implements ModInitializer, ClientModInitializer
         });
 
         ServerTickEvents.START_SERVER_TICK.register(EventHandler::onServerTick);
+        ServerLifecycleEvents.SERVER_STARTED.register(s -> server = s);
+        ServerLifecycleEvents.SERVER_STOPPED.register(s -> server = null);
         LOGGER.info("Connectivity initialized");
     }
 
