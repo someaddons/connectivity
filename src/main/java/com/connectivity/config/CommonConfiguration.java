@@ -10,7 +10,7 @@ public class CommonConfiguration implements ICommonConfig
     public boolean debugPrintMessages                = false;
     public boolean showFullResourceLocationException = false;
     public boolean disableChatVerificationDisconnect = true;
-    public int     logintimeout                      = 2400;
+    public int     logintimeout                      = 120;
     public int     packetHistoryMinutes              = 5;
     public int     disconnectTimeout                 = 60;
 

@@ -26,9 +26,6 @@ public abstract class NetworkManagerMixin
     @Shadow
     public abstract void disconnect(final Component p_129508_);
 
-    @Shadow
-    public abstract SocketAddress getRemoteAddress();
-
     @Unique
     private int counter = 0;
 
