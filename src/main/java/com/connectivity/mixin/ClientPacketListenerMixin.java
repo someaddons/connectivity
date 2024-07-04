@@ -1,13 +1,17 @@
 package com.connectivity.mixin;
 
 import com.connectivity.Connectivity;
+import com.connectivity.event.ClientEventHandler;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.network.chat.SignedMessageValidator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPacketListener.class)
 public class ClientPacketListenerMixin
@@ -36,5 +40,17 @@ public class ClientPacketListenerMixin
         }
 
         return true;
+    }
+
+    @Inject(method = "sendCommand", at = @At("HEAD"))
+    private void onSendCommand(final String command, final CallbackInfo ci)
+    {
+        ClientEventHandler.on(command);
+    }
+
+    @Inject(method = "sendUnsignedCommand", at = @At("HEAD"))
+    private void onSendCommand(final String command, final CallbackInfoReturnable<Boolean> cir)
+    {
+        ClientEventHandler.on(command);
     }
 }
