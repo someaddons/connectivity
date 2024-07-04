@@ -13,14 +13,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  */
 public class ClientEventHandler
 {
-    @SubscribeEvent
-    public static void on(ClientChatEvent event)
+    public static void on(final String command)
     {
-        if (event.getMessage().contains("/connectivity packetsClient"))
+        if (command.contains("connectivity packetsClient"))
         {
-            String[] split = event.getMessage().split(" ");
+            String[] split = command.split(" ");
             int minutes = 5;
             int index = 0;
+
 
             if (split.length > 2)
             {
