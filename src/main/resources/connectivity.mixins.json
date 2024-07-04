@@ -6,7 +6,8 @@
   "mixins": [
     "ClientboundCustomPayloadPacketMixin",
     "ConnectionErrorMixin",
-    "ConnectionProtocolMixin",
+    "ClientboundCustomQueryPacketMixin",
+    "ServerboundCustomQueryAnswerPacketMixin",
     "NettyCompressionDecoderMixin",
     "NetworkManagerMixin",
     "NetworkSystemMixin",

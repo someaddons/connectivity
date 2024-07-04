@@ -4,18 +4,18 @@ import com.connectivity.Connectivity;
 import com.connectivity.networkstats.NetworkStatGatherer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * Client side event handler, used to fake a client command
  */
 public class ClientEventHandler
 {
-    public static void on(String message, final CallbackInfoReturnable<Boolean> ci)
+    public static void on(String message, final CallbackInfo ci)
     {
-        if (message != null && message.contains("/connectivity packetsClient"))
+        if (message != null && message.contains("connectivity packetsClient"))
         {
-            ci.setReturnValue(true);
+            ci.cancel();
             String[] split = message.split(" ");
             int minutes = 5;
             int index = 0;

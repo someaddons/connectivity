@@ -1,12 +1,7 @@
 plugins {
     id 'fabric-loom' version "${loom_version}"
     id 'maven-publish'
-    id 'io.github.juuxel.loom-quiltflower' version "${quiltflower_version}"
     id 'com.github.johnrengelman.shadow' version '7.1.2' apply false
-}
-
-quiltflower {
-    addToRuntimeClasspath.set(true)
 }
 
 var ENV = System.getenv()
@@ -40,18 +35,16 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modCompileOnly("eu.pb4.polymer.impl:polymer:0.2.2+1.19")
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation("curse.maven:cupboard-326652:4669189")
+    modImplementation("curse.maven:cupboard-326652:5477517")
+
 }
 
 loom {
     runs {
         client {
             programArg '--username=Dev'
-            programArg '--uuid=123123123123123'
+            programArg '--uuid=c2f44529-eb64-40d0-b970-5ad748c7b377'
             vmArg '-Dmixin.debug=true'
         }
         server {
@@ -62,29 +55,36 @@ loom {
 
 processResources {
     inputs.property "version", project.version
-    filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }
 }
 
-def targetJavaVersion = 17
 tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release = targetJavaVersion
-    }
+    it.options.release = 21
 }
 
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
     archivesBaseName =  project.archives_base_name + "-fabric"
     withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
+
 publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            artifact jar
+        }
+    }
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
 }
