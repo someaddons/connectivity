@@ -4,9 +4,8 @@ import com.connectivity.Connectivity;
 import com.connectivity.networkstats.NetworkStatGatherer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.event.ClientChatEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /**
  * Client side event handler, used to fake a client command
@@ -56,7 +55,7 @@ public class ClientEventHandler
     static int  counter  = 0;
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event)
+    public static void onClientTick(ClientTickEvent.Post event)
     {
         if (counter++ > 100)
         {

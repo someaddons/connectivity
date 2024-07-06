@@ -1,8 +1,8 @@
 package com.connectivity.event;
 
 import com.connectivity.networkstats.NetworkStatGatherer;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 public class EventHandler
 {
@@ -10,7 +10,7 @@ public class EventHandler
     static int  counter  = 0;
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event)
+    public static void onServerTick(ServerTickEvent.Post event)
     {
         if (counter++ > 100)
         {

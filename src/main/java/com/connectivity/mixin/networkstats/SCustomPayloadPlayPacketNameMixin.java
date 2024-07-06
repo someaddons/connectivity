@@ -1,27 +1,34 @@
 package com.connectivity.mixin.networkstats;
 
-import com.connectivity.networkstats.IWrappedPacket;
-import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
+import com.connectivity.networkstats.INamedPacket;
+import net.minecraft.network.protocol.PacketType;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.resources.ResourceLocation;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ClientboundCustomPayloadPacket.class)
-public class SCustomPayloadPlayPacketNameMixin implements IWrappedPacket
+public abstract class SCustomPayloadPlayPacketNameMixin implements INamedPacket
 {
-    private Object org = null;
+    @Shadow
+    public abstract PacketType<ClientboundCustomPayloadPacket> type();
+
+    private String packetName = "";
 
     @Override
-    public Object getOriginalMsg()
+    public String getName()
     {
-        if (org instanceof IWrappedPacket && ((IWrappedPacket) org).getOriginalMsg() != null)
+        if (packetName.isEmpty())
         {
-            return ((IWrappedPacket) org).getOriginalMsg();
+            return this.type().id().toString();
         }
-        return org;
+        return packetName;
     }
 
     @Override
-    public void setOrgMsg(final Object name)
+    public void setName(final String name)
     {
-        org = name;
+        packetName = name;
     }
 }

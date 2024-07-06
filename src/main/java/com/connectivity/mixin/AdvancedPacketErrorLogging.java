@@ -1,6 +1,5 @@
 package com.connectivity.mixin;
 
-import com.connectivity.Connectivity;
 import com.connectivity.logging.PacketLogging;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketSendListener;
@@ -21,26 +20,20 @@ import java.nio.channels.ClosedChannelException;
 public abstract class AdvancedPacketErrorLogging
 {
     @Shadow
-    protected abstract void sendPacket(final Packet<?> p_129521_, @Nullable final PacketSendListener p_243246_);
+    protected abstract void sendPacket(final Packet<?> p_129521_, @Nullable final PacketSendListener p_243246_, final boolean bool);
 
-    @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V"), require = 0)
-    private void connectivity$logErrorFor(final Connection instance, final Packet<?> packet, PacketSendListener listener)
+    @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;Z)V"), require = 0)
+    private void connectivity$logErrorFor(final Connection instance, final Packet<?> packet, PacketSendListener listener, final boolean bool)
     {
-        connectivity$wrapSend(packet, listener);
-    }
-
-    @Redirect(method = "flushQueue", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V"), require = 0)
-    private void connectivity$logErrorForFlush(final Connection instance, final Packet<?> packet, PacketSendListener listener)
-    {
-        connectivity$wrapSend(packet, listener);
+        connectivity$wrapSend(packet, listener, bool);
     }
 
     @Unique
-    private void connectivity$wrapSend(final Packet<?> packet, final PacketSendListener listener)
+    private void connectivity$wrapSend(final Packet<?> packet, final PacketSendListener listener, final boolean bool)
     {
         try
         {
-            sendPacket(packet, listener);
+            sendPacket(packet, listener, bool);
         }
         catch (Throwable t)
         {

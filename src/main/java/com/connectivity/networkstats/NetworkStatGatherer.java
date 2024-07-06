@@ -55,9 +55,12 @@ public class NetworkStatGatherer
     public static void add(final String remoteAddress, final Packet packet, final int packetSize)
     {
         String packetName = packet.getClass().getSimpleName();
-        if (packet instanceof IWrappedPacket && ((IWrappedPacket) packet).getOriginalMsg() != null)
+        if (packet instanceof INamedPacket)
         {
-            packetName = ((IWrappedPacket) packet).getOriginalMsg().getClass().getSimpleName();
+            if (!((INamedPacket) packet).getName().isEmpty())
+            {
+                packetName = ((INamedPacket) packet).getName();
+            }
         }
 
         final PacketData data = connectionPacketData.computeIfAbsent(remoteAddress, remote -> new ConcurrentHashMap<>()).computeIfAbsent(packetName, name -> new PacketData(name));
@@ -412,7 +415,6 @@ public class NetworkStatGatherer
 
     /**
      * Outgoing summary for client
-     *
      */
     public static void reportClientStatsSummary(final Player playerEntity, final int minutes, final int startIndex)
     {

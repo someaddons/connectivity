@@ -3,10 +3,9 @@ package com.connectivity.mixin;
 import com.connectivity.Connectivity;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.unix.Errors;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -14,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.net.SocketAddress;
 import java.nio.channels.ClosedChannelException;
 
 @Mixin(Connection.class)

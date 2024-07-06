@@ -4,42 +4,39 @@ import com.connectivity.Connectivity;
 import com.connectivity.event.ClientEventHandler;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.PlayerChatMessage;
-import net.minecraft.network.chat.SignedMessageValidator;
+import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPacketListener.class)
 public class ClientPacketListenerMixin
 {
-    @Redirect(method = "handlePlayerChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/SignedMessageValidator;updateAndValidate(Lnet/minecraft/network/chat/PlayerChatMessage;)Z"))
-    private boolean checkMessage(final SignedMessageValidator instance, final PlayerChatMessage playerChatMessage)
+    @Inject(method = "handlePlayerChat", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;disconnect(Lnet/minecraft/network/chat/Component;)V"), cancellable = true)
+    private void checkMessage(final ClientboundPlayerChatPacket playerChatMessage, final CallbackInfo ci)
     {
-        if (!instance.updateAndValidate(playerChatMessage))
+        if (Connectivity.config.getCommonConfig().debugPrintMessages)
         {
-            if (Connectivity.config.getCommonConfig().debugPrintMessages)
+            final Component message;
+            if (!playerChatMessage.filterMask().isEmpty())
             {
-                final Component message;
-                if (!playerChatMessage.filterMask().isEmpty())
-                {
-                    Component component = playerChatMessage.filterMask().applyWithFormatting(playerChatMessage.signedContent());
-                    message = (component != null ? component : Component.empty());
-                }
-                else
-                {
-                    message = playerChatMessage.decoratedContent();
-                }
-
-                Connectivity.LOGGER.warn("Failed chat message verification for: " + message.getString());
+                Component component = playerChatMessage.filterMask().applyWithFormatting(playerChatMessage.body().content());
+                message = (component != null ? component : Component.empty());
             }
-            return Connectivity.config.getCommonConfig().disableChatVerificationDisconnect;
+            else
+            {
+                message = playerChatMessage.unsignedContent();
+            }
+
+            Connectivity.LOGGER.warn("Failed chat message verification for: " + message.getString());
         }
 
-        return true;
+        if (Connectivity.config.getCommonConfig().disableChatVerificationDisconnect)
+        {
+            ci.cancel();
+        }
     }
 
     @Inject(method = "sendCommand", at = @At("HEAD"))

@@ -1,8 +1,6 @@
 package com.connectivity.mixin.networkstats;
 
-import com.connectivity.Connectivity;
 import com.connectivity.logging.PacketLogging;
-import com.connectivity.networkstats.IWrappedPacket;
 import com.connectivity.networkstats.NetworkStatGatherer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,26 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PacketEncoder.class)
 public class NettyPacketEncoderMixin
 {
-    @Inject(method = "encode", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/Packet;write(Lnet/minecraft/network/FriendlyByteBuf;)V", shift = At.Shift.AFTER))
+    @Inject(method = "encode(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;Lio/netty/buffer/ByteBuf;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/codec/StreamCodec;encode(Ljava/lang/Object;Ljava/lang/Object;)V", shift = At.Shift.AFTER))
     private void onEncode(final ChannelHandlerContext channelHandlerContext, final Packet<?> packet, final ByteBuf packetBuffer, final CallbackInfo ci)
     {
         NetworkStatGatherer.add(channelHandlerContext.channel().remoteAddress().toString(), packet, packetBuffer.writerIndex());
-    }
-
-    @Inject(method = "encode(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;Lio/netty/buffer/ByteBuf;)V", at = @At(value = "INVOKE", target = "Ljava/io/IOException;<init>(Ljava/lang/String;)V"))
-    public void onNoPacket(final ChannelHandlerContext j, final Packet<?> packet, final ByteBuf friendlybytebuf, final CallbackInfo ci)
-    {
-        String name = packet.getClass().getSimpleName();
-        if (packet instanceof IWrappedPacket)
-        {
-            if (((IWrappedPacket) packet).getOriginalMsg() != null)
-            {
-                name = ((IWrappedPacket) packet).getOriginalMsg().getClass().getSimpleName();
-            }
-        }
-
-        Connectivity.LOGGER.warn("Packet not registered: " + name);
-        PacketLogging.logPacket(packet);
     }
 
     @Inject(method = "encode(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;Lio/netty/buffer/ByteBuf;)V", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V", remap = false))
