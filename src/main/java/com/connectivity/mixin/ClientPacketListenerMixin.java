@@ -1,6 +1,7 @@
 package com.connectivity.mixin;
 
 import com.connectivity.Connectivity;
+import com.connectivity.event.ClientEventHandler;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
@@ -8,6 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPacketListener.class)
 public class ClientPacketListenerMixin
@@ -35,5 +37,17 @@ public class ClientPacketListenerMixin
         {
             ci.cancel();
         }
+    }
+
+    @Inject(method = "sendCommand", at = @At("HEAD"), cancellable = true)
+    public void on(final String string, final CallbackInfo ci)
+    {
+        ClientEventHandler.on(string);
+    }
+
+    @Inject(method = "sendUnsignedCommand", at = @At("HEAD"))
+    private void onSendCommand(final String command, final CallbackInfoReturnable<Boolean> cir)
+    {
+        ClientEventHandler.on(command);
     }
 }

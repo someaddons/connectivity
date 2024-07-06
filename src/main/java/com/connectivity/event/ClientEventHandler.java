@@ -11,11 +11,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 public class ClientEventHandler
 {
-    public static void on(String message, final CallbackInfo ci)
+    public static void on(String message)
     {
         if (message != null && message.contains("connectivity packetsClient"))
         {
-            ci.cancel();
             String[] split = message.split(" ");
             int minutes = 5;
             int index = 0;
