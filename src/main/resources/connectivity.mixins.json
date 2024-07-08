@@ -1,7 +1,7 @@
 {
   "required": false,
   "package": "com.connectivity.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "refmap": "connectivity.refmap.json",
   "plugin": "com.connectivity.mixin.MixinConfig",
   "mixins": [
@@ -23,7 +23,6 @@
     "ClientBoundCustomPayloadPacketLMixin"
   ],
   "client": [
-    "CompoundTagMixin",
     "ClientPacketListenerMixin"
   ],
   "injectors": {
