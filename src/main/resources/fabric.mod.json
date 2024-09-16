@@ -38,10 +38,5 @@
   },
   "suggests": {
     "another-mod": "*"
-  },
-  "custom": {
-    "polymer:disable_mixin": {
-      "block.packet.ChunkDeltaUpdateS2CPacketMixin": "Compat"
-    }
   }
 }
