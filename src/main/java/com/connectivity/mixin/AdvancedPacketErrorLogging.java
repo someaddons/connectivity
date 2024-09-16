@@ -26,15 +26,15 @@ public abstract class AdvancedPacketErrorLogging
       final boolean bool,
       final Operation<Void> original)
     {
-        connectivity$wrapSend(packet, listener, bool, original);
+        connectivity$wrapSend(instance, packet, listener, bool, original);
     }
 
     @Unique
-    private void connectivity$wrapSend(final Packet<?> packet, final PacketSendListener listener, final boolean bool, final Operation<Void> original)
+    private void connectivity$wrapSend(final Connection instance, final Packet<?> packet, final PacketSendListener listener, final boolean bool, final Operation<Void> original)
     {
         try
         {
-            original.call(packet, listener, bool);
+            original.call(instance, packet, listener, bool);
         }
         catch (Throwable t)
         {
