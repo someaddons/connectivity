@@ -1,15 +1,14 @@
 package com.connectivity.mixin;
 
 import com.connectivity.logging.PacketLogging;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.protocol.Packet;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.nio.channels.ClosedChannelException;
 
@@ -19,21 +18,23 @@ import java.nio.channels.ClosedChannelException;
 @Mixin(value = Connection.class, priority = 5)
 public abstract class AdvancedPacketErrorLogging
 {
-    @Shadow
-    protected abstract void sendPacket(final Packet<?> p_129521_, @Nullable final PacketSendListener p_243246_, final boolean bool);
-
-    @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;Z)V"), require = 0)
-    private void connectivity$logErrorFor(final Connection instance, final Packet<?> packet, PacketSendListener listener, final boolean bool)
+    @WrapOperation(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;sendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;Z)V"), require = 0)
+    private void connectivity$logErrorFor(
+      final Connection instance,
+      final Packet<?> packet,
+      final PacketSendListener listener,
+      final boolean bool,
+      final Operation<Void> original)
     {
-        connectivity$wrapSend(packet, listener, bool);
+        connectivity$wrapSend(packet, listener, bool, original);
     }
 
     @Unique
-    private void connectivity$wrapSend(final Packet<?> packet, final PacketSendListener listener, final boolean bool)
+    private void connectivity$wrapSend(final Packet<?> packet, final PacketSendListener listener, final boolean bool, final Operation<Void> original)
     {
         try
         {
-            sendPacket(packet, listener, bool);
+            original.call(packet, listener, bool);
         }
         catch (Throwable t)
         {
