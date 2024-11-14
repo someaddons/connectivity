@@ -5,22 +5,24 @@
   "refmap": "connectivity.refmap.json",
   "plugin": "com.connectivity.mixin.MixinConfig",
   "mixins": [
-    "ConnectionErrorMixin",
-    "ClientboundCustomQueryPacketMixin",
-    "ServerboundCustomQueryAnswerPacketMixin",
-    "NettyCompressionDecoderMixin",
-    "NetworkManagerMixin",
-    "NetworkSystemMixin",
     "AdvancedPacketErrorLogging",
+    "ClientBoundCustomPayloadPacketLMixin",
+    "ClientboundCustomQueryPacketMixin",
+    "CompressionDecoderMixin",
+    "CompressionEncoderMixin",
+    "ConnectionMixin",
+    "NetworkSystemMixin",
+    "PacketDecoderMixin",
+    "PacketEncoderMixin",
     "ResourceLocationExceptionMixin",
+    "ServerboundCustomQueryAnswerPacketMixin",
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
     "networkstats.CCustomPayloadLoginPacketNameMixin",
     "networkstats.CCustomPayloadPacketNameMixin",
     "networkstats.NettyPacketEncoderMixin",
     "networkstats.SCustomPayloadLoginPacketNameMixin",
-    "networkstats.SCustomPayloadPlayPacketNameMixin",
-    "ClientBoundCustomPayloadPacketLMixin"
+    "networkstats.SCustomPayloadPlayPacketNameMixin"
   ],
   "client": [
     "ClientPacketListenerMixin"

@@ -1,6 +1,5 @@
 package com.connectivity.mixin.networkstats;
 
-import com.connectivity.logging.PacketLogging;
 import com.connectivity.networkstats.NetworkStatGatherer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -18,11 +17,5 @@ public class NettyPacketEncoderMixin
     private void onEncode(final ChannelHandlerContext channelHandlerContext, final Packet<?> packet, final ByteBuf packetBuffer, final CallbackInfo ci)
     {
         NetworkStatGatherer.add(channelHandlerContext.channel().remoteAddress().toString(), packet, packetBuffer.writerIndex());
-    }
-
-    @Inject(method = "encode(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;Lio/netty/buffer/ByteBuf;)V", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V", remap = false))
-    private void onError(final ChannelHandlerContext p_130545_, final Packet<?> packet, final ByteBuf p_130547_, final CallbackInfo ci)
-    {
-        PacketLogging.logPacket(packet, "caused an error above, printing name & data");
     }
 }

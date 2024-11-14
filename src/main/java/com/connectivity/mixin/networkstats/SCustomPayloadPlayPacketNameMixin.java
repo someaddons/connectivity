@@ -14,7 +14,7 @@ public abstract class SCustomPayloadPlayPacketNameMixin implements INamedPacket
     @Shadow
     public abstract PacketType<ClientboundCustomPayloadPacket> type();
 
-    private String packetName = "";
+    private transient String packetName = "";
 
     @Override
     public String getName()

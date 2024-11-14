@@ -13,7 +13,7 @@ public abstract class SCustomPayloadLoginPacketNameMixin implements INamedPacket
     @Shadow
     public abstract PacketType<ClientboundCustomQueryPacket> type();
 
-    private String packetName = "";
+    private transient String packetName = "";
 
     @Override
     public String getName()

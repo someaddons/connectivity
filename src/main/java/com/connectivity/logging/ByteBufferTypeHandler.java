@@ -4,21 +4,19 @@ import com.connectivity.Connectivity;
 import com.google.common.base.Charsets;
 import com.google.gson.*;
 import io.netty.buffer.ByteBuf;
-import io.netty.util.internal.StringUtil;
+import io.netty.buffer.ByteBufUtil;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 
 import java.lang.reflect.Type;
-import java.util.regex.Pattern;
 
 public class ByteBufferTypeHandler<T>
-  implements JsonSerializer<ByteBuf>, JsonDeserializer<ByteBuf>
+    implements JsonSerializer<ByteBuf>, JsonDeserializer<ByteBuf>
 {
-    public static final  double  HUMA_READABLE_THRESHOLD = 4;
-    private static final Pattern pattern                 = Pattern.compile("(?<=\\d),\\d+");
+    private static final double HUMA_READABLE_THRESHOLD = 3;
 
     @Override
     public ByteBuf deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-      throws JsonParseException
+        throws JsonParseException
     {
         return null;
     }
@@ -29,17 +27,13 @@ public class ByteBufferTypeHandler<T>
         final JsonArray result = new JsonArray();
         if (!Connectivity.config.getCommonConfig().debugPrintMessages)
         {
-            final JsonElement element = context.serialize("Enable debugPrintMessages to print this");
+            final JsonElement element = context.serialize("Enable debugPrintMessages to display this data");
             result.add(element);
         }
         else
         {
-            src.resetReaderIndex();
-
-            String data = cleanupString(src.toString(Charsets.UTF_8)) + "\n";
+            final String data = cleanupString(src.toString(Charsets.UTF_8)) + "\n";
             double entropy = calculateEntropy(data);
-            data = data.replaceAll("\\p{C}", "");
-            data = data.replaceAll("\\?", "");
             if (entropy > HUMA_READABLE_THRESHOLD)
             {
                 final JsonElement element = context.serialize(cleanupString(data));
@@ -50,10 +44,13 @@ public class ByteBufferTypeHandler<T>
                 result.add("<partial numeric data>");
                 StringBuilder arrayString = new StringBuilder();
                 arrayString.append("[");
-                for (int i = 0; i < src.array().length && i < 200; i++)
+
+                byte[] byteData = ByteBufUtil.getBytes(src, 0, src.readableBytes() + src.readerIndex());
+
+                for (int i = 0; i < byteData.length && i < 200; i++)
                 {
-                    arrayString.append(src.array()[i]);
-                    if (i < src.array().length - 1)
+                    arrayString.append(byteData[i]);
+                    if (i < byteData.length - 1)
                     {
                         arrayString.append(", ");
                     }
@@ -61,8 +58,6 @@ public class ByteBufferTypeHandler<T>
                 arrayString.append("]");
                 result.add(arrayString.toString());
             }
-
-            src.resetReaderIndex();
         }
 
         return result;
@@ -90,17 +85,18 @@ public class ByteBufferTypeHandler<T>
         return entropy;
     }
 
-    private String cleanupString(String in)
+    private String cleanupString(String input)
     {
-        in = in.replaceAll("\\\\n", System.getProperty("line.separator"));
-        in = in.replaceAll("�", " ");
+        StringBuilder readableText = new StringBuilder();
 
-        if (pattern.matcher(in).find())
+        for (char c : input.toCharArray())
         {
-            in = "Printing reduced bytebuffer data:" + System.getProperty("line.separator") + in;
+            if (c >= 32 && c <= 126)
+            {  // Only keep printable ASCII characters
+                readableText.append(c);
+            }
         }
 
-        in = pattern.matcher(in).replaceAll("") + System.getProperty("line.separator");
-        return in;
+        return readableText.toString();
     }
 }
