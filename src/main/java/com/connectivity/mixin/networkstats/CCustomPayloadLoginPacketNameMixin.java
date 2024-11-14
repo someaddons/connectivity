@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(ServerboundCustomQueryAnswerPacket.class)
 public class CCustomPayloadLoginPacketNameMixin implements INamedPacket
 {
-    private String packetName = "";
+    private transient String packetName = "";
 
     @Override
     public String getName()

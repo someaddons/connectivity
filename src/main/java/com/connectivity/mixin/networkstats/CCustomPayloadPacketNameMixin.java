@@ -12,7 +12,7 @@ public abstract class CCustomPayloadPacketNameMixin implements INamedPacket
     @Shadow
     public abstract PacketType<ServerboundCustomPayloadPacket> type();
 
-    private String packetName = "";
+    private transient String packetName = "";
 
     @Override
     public String getName()
