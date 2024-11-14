@@ -41,29 +41,4 @@ public class CompressionEncoderMixin
             DISABLE_PACKET_DEBUG = true;
         }
     }
-
-    @Unique
-    private void printDebug(List<Object> decodingResults)
-    {
-        if (!Connectivity.config.getCommonConfig().debugPrintMessages)
-        {
-            return;
-        }
-
-        Connectivity.LOGGER.error("Received large message, debug print below!");
-        Connectivity.LOGGER.error("----BEGIND PRINTING PACKET-----");
-        for (int i = 0; i < decodingResults.size(); i++)
-        {
-            final ByteBuf buf = ((ByteBuf) decodingResults.get(i));
-            if (buf == null)
-            {
-                continue;
-            }
-
-            Connectivity.LOGGER.error("Data:");
-            PacketLogging.logPacket(buf);
-            buf.resetReaderIndex();
-        }
-        Connectivity.LOGGER.error("----END PRINTING PACKET-----");
-    }
 }
