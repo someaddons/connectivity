@@ -55,6 +55,7 @@ loom {
         }
         server {
             runDir = "runserver"
+            vmArg '-Dmixin.debug=true'
         }
     }
 }

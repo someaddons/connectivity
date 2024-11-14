@@ -1,5 +1,6 @@
 package com.connectivity.logging;
 
+import com.connectivity.Connectivity;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
@@ -20,7 +21,20 @@ public class GsonErrorHandling implements TypeAdapterFactory
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type)
     {
-        final TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);
+        final TypeAdapter<T> delegate;
+        try
+        {
+            delegate = gson.getDelegateAdapter(this, type);
+        }
+        catch (Throwable t)
+        {
+            if (Connectivity.config.getCommonConfig().debugPrintMessages)
+            {
+                Connectivity.LOGGER.warn("Could not create delegate adapter for type:" + type.getType().getTypeName() + " debug error below", t);
+            }
+            // returns empty adapter to avoid default falling into the same issue
+            return ReflectiveSafeTypeAdapterFactory.createNew(gson, type);
+        }
 
         TypeAdapter<T> customAdapter = new TypeAdapter<T>()
         {

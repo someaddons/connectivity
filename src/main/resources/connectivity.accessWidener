@@ -1,1 +1,3 @@
 accessWidener   v2  named
+accessible field net/minecraft/network/ConnectionProtocol flows Ljava/util/Map;
+accessible field net/minecraft/network/ConnectionProtocol$PacketSet classToId Lit/unimi/dsi/fastutil/objects/Object2IntMap;

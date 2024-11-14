@@ -3,6 +3,7 @@ package com.connectivity.mixin;
 import com.connectivity.Connectivity;
 import com.google.common.base.Charsets;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.Packet;
@@ -19,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.function.Function;
 
-@Mixin(targets = "net.minecraft.network.ConnectionProtocol$PacketSet", remap = true)
+@Mixin(ConnectionProtocol.PacketSet.class)
 /**
  * Bypasses constructor size limits
  */
@@ -31,7 +32,7 @@ public class ConnectionProtocolMixin<T extends PacketListener>
 
     @Shadow
     @Final
-    private Object2IntMap<Class<? extends Packet<T>>> classToId;
+    public Object2IntMap<Class<? extends Packet<T>>> classToId;
 
     @Inject(method = "addPacket", at = @At(value = "HEAD"), cancellable = true)
     public <P extends Packet<T>> void onAdd(
