@@ -5,31 +5,33 @@
   "refmap": "connectivity.refmap.json",
   "plugin": "com.connectivity.mixin.MixinConfig",
   "mixins": [
-    "ConnectionErrorMixin",
+    "AdvancedPacketErrorLogging",
+    "ClientBoundCustomPayloadPacketLMixin",
+    "CompressionDecoderMixin",
+    "CompressionEncoderMixin",
+    "ConnectionMixin",
     "ConnectionProtocolMixin",
-    "NettyCompressionDecoderMixin",
-    "NetworkManagerMixin",
     "NetworkRegistryMixin",
     "NetworkSystemMixin",
-    "AdvancedPacketErrorLogging",
+    "PacketDecoderMixin",
+    "PacketEncoderMixin",
     "ResourceLocationExceptionMixin",
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
     "SimpleChannelMixin",
+    "compat.MinecoloniesNetworkChannelMixin",
+    "compat.MinecoloniesPacketNameMixin",
+    "compat.StructurizeNetworkChannelMixin",
+    "compat.StructurizePacketNameMixin",
     "networkstats.CCustomPayloadLoginPacketNameMixin",
     "networkstats.CCustomPayloadPacketNameMixin",
     "networkstats.NettyPacketEncoderMixin",
     "networkstats.SCustomPayloadLoginPacketNameMixin",
-    "networkstats.SCustomPayloadPlayPacketNameMixin",
-    "ClientBoundCustomPayloadPacketLMixin",
-    "compat.MinecoloniesPacketNameMixin",
-    "compat.MinecoloniesNetworkChannelMixin",
-    "compat.StructurizeNetworkChannelMixin",
-    "compat.StructurizePacketNameMixin"
+    "networkstats.SCustomPayloadPlayPacketNameMixin"
   ],
   "client": [
-    "CompoundTagMixin",
-    "ClientPacketListenerMixin"
+    "ClientPacketListenerMixin",
+    "CompoundTagMixin"
   ],
   "injectors": {
     "defaultRequire": 1
