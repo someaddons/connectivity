@@ -45,7 +45,10 @@ public class PacketDecoderMixin<T extends PacketListener>
         throws IOException
     {
         PacketLogging.logPacket(packet, " id " + packet.type() + " larger than expected error detected, printing packet and buffer. Stacktrace gets logged after this");
-        PacketLogging.logPacket(buffer.copy(buffer.readerIndex(), buffer.readableBytes()), " id " + packet.type() + " extra bytes: ");
+        final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
+        Connectivity.config.getCommonConfig().debugPrintMessages = true;
+        PacketLogging.logPacket(buffer.copy(buffer.readerIndex(), buffer.readableBytes()), " id " + packet.type() + " data of " + buffer.readableBytes() + " extra bytes: ");
+        Connectivity.config.getCommonConfig().debugPrintMessages = prev;
 
         throw new IOException(
             "Packet "
@@ -85,7 +88,10 @@ public class PacketDecoderMixin<T extends PacketListener>
 
             Connectivity.LOGGER.warn("Decoding error for packet:" + name, t);
             Connectivity.LOGGER.warn("<------ Packet Data Export: ------>");
+            final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
+            Connectivity.config.getCommonConfig().debugPrintMessages = true;
             PacketLogging.logPacket(buf);
+            Connectivity.config.getCommonConfig().debugPrintMessages = prev;
             Connectivity.LOGGER.warn("<------ Packet Data Export End: ------>");
             buf.readerIndex(prevIndex);
             throw t;

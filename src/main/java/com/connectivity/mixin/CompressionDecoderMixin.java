@@ -99,7 +99,12 @@ public abstract class CompressionDecoderMixin extends ByteToMessageDecoder
             }
 
             Connectivity.LOGGER.error("Data:");
+
+            final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
+            Connectivity.config.getCommonConfig().debugPrintMessages = true;
             PacketLogging.logPacket(buf);
+            Connectivity.config.getCommonConfig().debugPrintMessages = prev;
+
             buf.resetReaderIndex();
         }
         Connectivity.LOGGER.error("----END PRINTING PACKET-----");
