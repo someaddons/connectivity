@@ -44,7 +44,7 @@ public abstract class AdvancedPacketErrorLogging
         }
         catch (Throwable t)
         {
-            if (!(t instanceof ClosedChannelException))
+            if (!(t instanceof ClosedChannelException) && Connectivity.config.getCommonConfig().debugPrintMessages)
             {
                 PacketLogging.logPacket(packet, "threw an error:" + t.getLocalizedMessage());
             }
