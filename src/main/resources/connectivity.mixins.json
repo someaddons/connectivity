@@ -11,6 +11,7 @@
     "CompressionDecoderMixin",
     "CompressionEncoderMixin",
     "ConnectionMixin",
+    "ConnectionTimeoutMixin",
     "NetworkSystemMixin",
     "PacketDecoderMixin",
     "PacketEncoderMixin",
