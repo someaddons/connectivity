@@ -1,5 +1,6 @@
 package com.connectivity.mixin;
 
+import com.connectivity.Connectivity;
 import com.connectivity.logging.PacketLogging;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -38,7 +39,7 @@ public abstract class AdvancedPacketErrorLogging
         }
         catch (Throwable t)
         {
-            if (!(t instanceof ClosedChannelException))
+            if (!(t instanceof ClosedChannelException) && Connectivity.config.getCommonConfig().debugPrintMessages)
             {
                 PacketLogging.logPacket(packet, "threw an error:" + t.getLocalizedMessage());
             }
