@@ -73,27 +73,30 @@ public class PacketDecoderMixin<T extends PacketListener>
         }
         catch (Throwable t)
         {
-            int prevIndex = buf.readerIndex();
-            buf.resetReaderIndex();
-            int codecIndex = VarInt.read(buf);
-
-            String name = "unknown";
-            if (protocolInfo instanceof ProtocolInfoBuilder.Implementation implementation)
+            if (Connectivity.config.getCommonConfig().debugPrintMessages)
             {
-                if (implementation.codec() instanceof IdDispatchCodec<?, ?, ?> idDispatchCodec)
-                {
-                    name = protocolInfo.id().id() + "/" + idDispatchCodec.byId.get(codecIndex).type();
-                }
-            }
+                int prevIndex = buf.readerIndex();
+                buf.resetReaderIndex();
+                int codecIndex = VarInt.read(buf);
 
-            Connectivity.LOGGER.warn("Decoding error for packet:" + name, t);
-            Connectivity.LOGGER.warn("<------ Packet Data Export: ------>");
-            final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
-            Connectivity.config.getCommonConfig().debugPrintMessages = true;
-            PacketLogging.logPacket(buf);
-            Connectivity.config.getCommonConfig().debugPrintMessages = prev;
-            Connectivity.LOGGER.warn("<------ Packet Data Export End: ------>");
-            buf.readerIndex(prevIndex);
+                String name = "unknown";
+                if (protocolInfo instanceof ProtocolInfoBuilder.Implementation implementation)
+                {
+                    if (implementation.codec() instanceof IdDispatchCodec<?, ?, ?> idDispatchCodec)
+                    {
+                        name = protocolInfo.id().id() + "/" + idDispatchCodec.byId.get(codecIndex).type();
+                    }
+                }
+
+                Connectivity.LOGGER.warn("Decoding error for packet:" + name, t);
+                Connectivity.LOGGER.warn("<------ Packet Data Export: ------>");
+                final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
+                Connectivity.config.getCommonConfig().debugPrintMessages = true;
+                PacketLogging.logPacket(buf);
+                Connectivity.config.getCommonConfig().debugPrintMessages = prev;
+                Connectivity.LOGGER.warn("<------ Packet Data Export End: ------>");
+                buf.readerIndex(prevIndex);
+            }
             throw t;
         }
     }
