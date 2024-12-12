@@ -109,7 +109,7 @@ public abstract class ConnectionMixin
         }
     }
 
-    @Redirect(method = "disconnect", at = @At(value = "INVOKE", target = "Lio/netty/channel/ChannelFuture;awaitUninterruptibly()Lio/netty/channel/ChannelFuture;", remap = false))
+    @Redirect(method = "disconnect", at = @At(value = "INVOKE", target = "Lio/netty/channel/ChannelFuture;awaitUninterruptibly()Lio/netty/channel/ChannelFuture;", remap = false), require = 0)
     private ChannelFuture onWait(final ChannelFuture instance)
     {
         try
