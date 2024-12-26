@@ -5,15 +5,12 @@ import com.connectivity.logging.PacketLogging;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import io.netty.handler.codec.DecoderException;
 import net.minecraft.network.CompressionDecoder;
-import net.minecraft.network.VarInt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -39,45 +36,26 @@ public abstract class CompressionDecoderMixin extends ByteToMessageDecoder
     @Inject(method = "decode", at = @At("HEAD"))
     private void disabledLimit(final ChannelHandlerContext p_129441_, final ByteBuf p_129442_, final List<Object> p_129443_, final CallbackInfo ci)
     {
-        originalValidate = validateDecompressed;
-        validateDecompressed = false;
+        if (Connectivity.config.getCommonConfig().disablePacketLimits)
+        {
+            originalValidate = validateDecompressed;
+            validateDecompressed = false;
+        }
     }
 
     @Inject(method = "decode", at = @At("RETURN"))
     private void restoreLimit(final ChannelHandlerContext p_129441_, final ByteBuf p_129442_, final List<Object> p_129443_, final CallbackInfo ci)
     {
-        validateDecompressed = originalValidate;
+        if (Connectivity.config.getCommonConfig().disablePacketLimits)
+        {
+            validateDecompressed = originalValidate;
+        }
     }
 
-    @Redirect(method = "decode", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/VarInt;read(Lio/netty/buffer/ByteBuf;)I"))
-    private int saveSize(final ByteBuf buf)
+    @Inject(method = "decode", at = @At(value = "INVOKE", target = "Lio/netty/handler/codec/DecoderException;<init>(Ljava/lang/String;)V"))
+    private void onError(final ChannelHandlerContext p_129441_, final ByteBuf p_129442_, final List<Object> p_129443_, final CallbackInfo ci)
     {
-        this.size = VarInt.read(buf);
-        return size;
-    }
-
-    @Inject(method = "decode", at = @At("RETURN"))
-    private void checkSize(final ChannelHandlerContext p_129441_, final ByteBuf p_129442_, final List<Object> list, final CallbackInfo ci)
-    {
-        if (size < this.threshold)
-        {
-            if (!Connectivity.config.getCommonConfig().disablePacketLimits)
-            {
-                printDebug(list);
-                throw new DecoderException("Badly compressed packet - size of " + size + " is below server threshold of " + this.threshold);
-            }
-        }
-
-        if (size > 8388608)
-        {
-            if (!Connectivity.config.getCommonConfig().disablePacketLimits)
-            {
-                printDebug(list);
-                throw new DecoderException("Badly compressed packet - size of " + size + " is larger than protocol maximum of " + 8388608);
-            }
-        }
-
-        size = 0;
+        printDebug(p_129443_);
     }
 
     @Unique
@@ -88,7 +66,7 @@ public abstract class CompressionDecoderMixin extends ByteToMessageDecoder
             return;
         }
 
-        Connectivity.LOGGER.error("Received large message, debug print below!");
+        Connectivity.LOGGER.error("Received message causing a decode exception below, printing data:!");
         Connectivity.LOGGER.error("----BEGIND PRINTING PACKET-----");
         for (int i = 0; i < decodingResults.size(); i++)
         {
@@ -99,12 +77,10 @@ public abstract class CompressionDecoderMixin extends ByteToMessageDecoder
             }
 
             Connectivity.LOGGER.error("Data:");
-
             final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
             Connectivity.config.getCommonConfig().debugPrintMessages = true;
             PacketLogging.logPacket(buf);
             Connectivity.config.getCommonConfig().debugPrintMessages = prev;
-
             buf.resetReaderIndex();
         }
         Connectivity.LOGGER.error("----END PRINTING PACKET-----");
