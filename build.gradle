@@ -108,6 +108,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:piston-303278:4631200")
     compileOnly fg.deobf("curse.maven:do-527361:5109746")
     compileOnly fg.deobf("curse.maven:bo-522992:5064900")
+    compileOnly fg.deobf("curse.maven:krypton-549394:4606534")
 }
 
 jar {
