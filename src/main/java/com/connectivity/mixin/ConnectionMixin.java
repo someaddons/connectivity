@@ -52,6 +52,14 @@ public abstract class ConnectionMixin
         // Error handling for many exceptions but traditional disconnect attempts failed
         if (counter >= 20)
         {
+            String temp = "unknown";
+            if (packetListener instanceof ServerGamePacketListenerImpl serverGamePacketListener)
+            {
+                temp = serverGamePacketListener.getPlayer().getName().getString();
+            }
+
+            final String name = temp;
+
             counter = -100000;
             this.disconnect(Component.literal("Too many network errors"));
             context.channel().disconnect().addListener(future -> {
@@ -59,7 +67,7 @@ public abstract class ConnectionMixin
                 {
                     if (Connectivity.config.getCommonConfig().debugPrintMessages)
                     {
-                        Connectivity.LOGGER.warn("Failed to disconnect channel: " + context.channel().remoteAddress());
+                        Connectivity.LOGGER.warn("Failed to disconnect channel for: " + name);
                     }
                 }
 
@@ -68,14 +76,14 @@ public abstract class ConnectionMixin
                     {
                         if (Connectivity.config.getCommonConfig().debugPrintMessages)
                         {
-                            Connectivity.LOGGER.warn("Channel deregistered: " + context.channel().remoteAddress());
+                            Connectivity.LOGGER.warn("Channel deregistered for: " + name);
                         }
                     }
                     else
                     {
                         if (Connectivity.config.getCommonConfig().debugPrintMessages)
                         {
-                            Connectivity.LOGGER.warn("Failed to deregister channel: " + context.channel().remoteAddress());
+                            Connectivity.LOGGER.warn("Failed to deregister channel for: " + name);
                         }
                     }
 
@@ -84,24 +92,27 @@ public abstract class ConnectionMixin
                         {
                             if (Connectivity.config.getCommonConfig().debugPrintMessages)
                             {
-                                Connectivity.LOGGER.warn("Channel closed: " + context.channel().remoteAddress());
+                                Connectivity.LOGGER.warn("Channel closed for: " + name);
                             }
                         }
                         else
                         {
                             if (Connectivity.config.getCommonConfig().debugPrintMessages)
                             {
-                                Connectivity.LOGGER.warn("Failed to close channel: " + context.channel().remoteAddress());
+                                Connectivity.LOGGER.warn("Failed to close channel for: " + name);
                             }
                         }
 
-                        if (Connectivity.config.getCommonConfig().debugPrintMessages)
+                        for (String handler : context.channel().pipeline().names())
                         {
-                            Connectivity.LOGGER.warn("Removing Handlers");
-                        }
-                        for (String name : context.channel().pipeline().names())
-                        {
-                            context.channel().pipeline().remove(name);
+                            try
+                            {
+                                context.channel().pipeline().remove(handler);
+                            }
+                            catch (Throwable e)
+                            {
+                                // noop
+                            }
                         }
                     });
                 });
