@@ -5,6 +5,7 @@
   "plugin": "com.connectivity.mixin.MixinConfig",
   "mixins": [
     "AdvancedPacketErrorLogging",
+    "ChunkSectionReadSkipMixin",
     "ClientboundCustomPayloadPacketMixin",
     "ClientboundCustomQueryPacketMixin",
     "CompressionDecoderMixin",
@@ -19,6 +20,7 @@
     "ServerboundCustomQueryAnswerPacketMixin",
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
+    "networkstats.BundlePacketNameMixin",
     "networkstats.CCustomPayloadLoginPacketNameMixin",
     "networkstats.CCustomPayloadPacketNameMixin",
     "networkstats.NettyPacketEncoderMixin",
