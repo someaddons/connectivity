@@ -25,7 +25,19 @@ public abstract class BundlePacketNameMixin implements INamedPacket
 
         for (final Packet packet : packets)
         {
-            name += " " + packet.type().id().toString();
+            if (packet == this)
+            {
+                continue;
+            }
+
+            if (packet instanceof INamedPacket)
+            {
+                name += "; " + ((INamedPacket) packet).getName();
+            }
+            else
+            {
+                name += "; " + packet.type().id().toString();
+            }
         }
 
         return name;

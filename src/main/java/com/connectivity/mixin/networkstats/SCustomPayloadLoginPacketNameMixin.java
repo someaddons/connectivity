@@ -13,6 +13,9 @@ public abstract class SCustomPayloadLoginPacketNameMixin implements INamedPacket
     @Shadow
     public abstract PacketType<ClientboundCustomQueryPacket> type();
 
+    @Shadow
+    public abstract CustomQueryPayload payload();
+
     private transient String packetName = "";
 
     @Override
@@ -20,7 +23,7 @@ public abstract class SCustomPayloadLoginPacketNameMixin implements INamedPacket
     {
         if (packetName.isEmpty())
         {
-            return this.type().id().toString();
+            return this.payload().id().toString();
         }
         return packetName;
     }

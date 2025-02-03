@@ -3,8 +3,7 @@ package com.connectivity.mixin.networkstats;
 import com.connectivity.networkstats.INamedPacket;
 import net.minecraft.network.protocol.PacketType;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.resources.ResourceLocation;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -14,6 +13,9 @@ public abstract class SCustomPayloadPlayPacketNameMixin implements INamedPacket
     @Shadow
     public abstract PacketType<ClientboundCustomPayloadPacket> type();
 
+    @Shadow
+    public abstract CustomPacketPayload payload();
+
     private transient String packetName = "";
 
     @Override
@@ -21,7 +23,7 @@ public abstract class SCustomPayloadPlayPacketNameMixin implements INamedPacket
     {
         if (packetName.isEmpty())
         {
-            return this.type().id().toString();
+            return this.payload().type().id().toString();
         }
         return packetName;
     }

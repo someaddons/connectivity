@@ -48,7 +48,8 @@ public class GsonErrorHandling implements TypeAdapterFactory
                           !(value instanceof Collection) &&
                           !(value instanceof Map) &&
                           !(value instanceof ByteBuf) &&
-                          !value.getClass().getName().startsWith("java."))
+                        !value.getClass().getName().startsWith("java.") &&
+                        !value.getClass().isRecord())
                     {
                         // Take advantage of existing toString implementations, those help reducing circles aswell
                         final String toString = value.toString();
