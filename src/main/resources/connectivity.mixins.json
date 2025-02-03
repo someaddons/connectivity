@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "connectivity.refmap.json",
   "plugin": "com.connectivity.mixin.MixinConfig",
+  "priority": 200,
   "mixins": [
     "AdvancedPacketErrorLogging",
     "ChunkSectionReadSkipMixin",
@@ -14,6 +15,7 @@
     "ConnectionProtocolMixin",
     "ConnectionTimeoutMixin",
     "NetworkRegistryMixin",
+    "FriendlyByteBufLimitMixin",
     "NetworkSystemMixin",
     "PacketDecoderMixin",
     "PacketEncoderMixin",
