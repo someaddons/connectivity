@@ -24,7 +24,7 @@ public abstract class ChunkSectionReadSkipMixin extends ChunkAccess
 {
     @Shadow
     @Final
-    private Level level;
+    public Level level;
 
     public ChunkSectionReadSkipMixin(
         final ChunkPos p_187621_,

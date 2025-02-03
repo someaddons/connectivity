@@ -39,7 +39,7 @@ public class ClientPacketListenerMixin
         }
     }
 
-    @Inject(method = "sendCommand", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "sendCommand", at = @At("HEAD"))
     public void on(final String string, final CallbackInfo ci)
     {
         ClientEventHandler.on(string);
