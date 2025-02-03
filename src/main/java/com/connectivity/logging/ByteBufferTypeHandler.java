@@ -32,7 +32,10 @@ public class ByteBufferTypeHandler<T>
         }
         else
         {
+            final int prevReadIndex = src.readerIndex();
+            src.resetReaderIndex();
             final String data = cleanupString(src.toString(Charsets.UTF_8)) + "\n";
+            src.readerIndex(prevReadIndex);
             double entropy = calculateEntropy(data);
             if (entropy > HUMA_READABLE_THRESHOLD)
             {

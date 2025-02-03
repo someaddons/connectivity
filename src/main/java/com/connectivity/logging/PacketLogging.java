@@ -52,6 +52,7 @@ public class PacketLogging
             .registerTypeHierarchyAdapter(double[].class, new DoubleArraySerializer())
             .registerTypeHierarchyAdapter(float[].class, new FloatArraySerializer())
             .registerTypeHierarchyAdapter(long[].class, new LongArraySerializer())
+            .registerTypeHierarchyAdapter(Iterable.class, new IterableTypeHandler<>())
             .registerTypeAdapter(Recipe.class, new RecipeTypeHandler())
             .create();
     }
@@ -63,6 +64,12 @@ public class PacketLogging
 
     public static void logPacket(final Object packet, String warning)
     {
+        if (packet == lastPacket)
+        {
+            return;
+        }
+        lastPacket = packet;
+
         String name = packet.getClass().getSimpleName();
         if (packet instanceof INamedPacket)
         {
@@ -83,4 +90,6 @@ public class PacketLogging
             Connectivity.LOGGER.warn("Failed to print data for packet", e);
         }
     }
+
+    private static Object lastPacket = null;
 }

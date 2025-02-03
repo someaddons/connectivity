@@ -1,11 +1,16 @@
 package com.connectivity.mixin;
 
 import com.connectivity.Connectivity;
+import com.connectivity.logging.PacketLogging;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.network.Connection;
+import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.PacketListener;
+import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,6 +50,12 @@ public abstract class ConnectionMixin
                 else
                 {
                     Connectivity.LOGGER.warn("Network error in:" + context.name() + " with:" + packetListener, throwable);
+                }
+
+                if (lastPacket != null)
+                {
+                    PacketLogging.logPacket(lastPacket, "Printing packet to send:");
+                    lastPacket = null;
                 }
             }
         }
@@ -134,5 +145,30 @@ public abstract class ConnectionMixin
         }
 
         return null;
+    }
+
+    @Unique
+    private Packet<?> lastPacket = null;
+
+    @Inject(method = "doSendPacket", at = @At("HEAD"))
+    private void onSend(
+        final Packet<?> p_243260_,
+        final PacketSendListener p_243290_,
+        final ConnectionProtocol p_243203_,
+        final ConnectionProtocol p_243307_,
+        final CallbackInfo ci)
+    {
+        lastPacket = p_243260_;
+    }
+
+    @Inject(method = "doSendPacket", at = @At("RETURN"))
+    private void afterSend(
+        final Packet<?> p_243260_,
+        final PacketSendListener p_243290_,
+        final ConnectionProtocol p_243203_,
+        final ConnectionProtocol p_243307_,
+        final CallbackInfo ci)
+    {
+        lastPacket = null;
     }
 }

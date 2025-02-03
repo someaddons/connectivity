@@ -2,3 +2,5 @@ accessWidener   v2  named
 accessible field net/minecraft/network/ConnectionProtocol flows Ljava/util/Map;
 accessible field net/minecraft/network/ConnectionProtocol$PacketSet classToId Lit/unimi/dsi/fastutil/objects/Object2IntMap;
 accessible field net/minecraft/network/Connection channel Lio/netty/channel/Channel;
+accessible field net/minecraft/nbt/NbtAccounter quota J
+mutable field net/minecraft/nbt/NbtAccounter quota J

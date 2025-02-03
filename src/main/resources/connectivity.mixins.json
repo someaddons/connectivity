@@ -5,11 +5,13 @@
   "plugin": "com.connectivity.mixin.MixinConfig",
   "mixins": [
     "AdvancedPacketErrorLogging",
+    "ChunkSectionReadSkipMixin",
     "ClientboundCustomPayloadPacketMixin",
     "CompressionDecoderMixin",
     "ConnectionMixin",
     "ConnectionProtocolMixin",
     "ConnectionTimeoutMixin",
+    "FriendlyByteBufLimitMixin",
     "NetworkSystemMixin",
     "PacketDecoderMixin",
     "PacketEncoderMixin",
