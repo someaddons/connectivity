@@ -16,6 +16,7 @@
     "ConnectionTimeoutMixin",
     "NetworkRegistryMixin",
     "FriendlyByteBufLimitMixin",
+    "NbtAccounterMixin",
     "NetworkSystemMixin",
     "PacketDecoderMixin",
     "PacketEncoderMixin",
