@@ -2,14 +2,14 @@ package com.connectivity.mixin;
 
 import com.connectivity.networkstats.IModifyAbleNbtAccounter;
 import net.minecraft.nbt.NbtAccounter;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 
 @Mixin(NbtAccounter.class)
 public class NbtAccounterMixin implements IModifyAbleNbtAccounter
 {
     @Shadow
+    @Mutable
+    @Final
     public long quota;
 
     @Unique
