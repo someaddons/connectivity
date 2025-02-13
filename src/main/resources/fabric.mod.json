@@ -16,6 +16,7 @@
   "license": "ARR",
   "icon": "assets/modid/logo.png",
 
+  "accessWidener": "connectivity.accessWidener",
   "environment": "*",
   "entrypoints": {
     "main": [
