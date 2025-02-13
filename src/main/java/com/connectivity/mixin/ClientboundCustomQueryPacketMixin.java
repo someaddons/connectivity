@@ -20,7 +20,7 @@ public class ClientboundCustomQueryPacketMixin
         if (Connectivity.config.getCommonConfig().debugPrintMessages)
         {
             data.resetReaderIndex();
-            Connectivity.LOGGER.warn("Too big ClientboundCustomQueryPacket payload data!");
+            Connectivity.LOGGER.warn("Too big ClientboundCustomQueryPacket payload data for: " + resourceLocation);
             Connectivity.LOGGER.warn("Data:" + data.toString(Charsets.UTF_8));
             data.resetReaderIndex();
         }
