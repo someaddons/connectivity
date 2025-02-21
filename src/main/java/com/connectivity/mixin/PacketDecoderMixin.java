@@ -49,13 +49,15 @@ public class PacketDecoderMixin<T extends PacketListener>
         final Packet packet)
         throws IOException
     {
-        PacketLogging.logPacket(packet, " id " + packetID + " larger than expected error detected, printing packet and buffer. Stacktrace gets logged after this");
+        if (Connectivity.config.getCommonConfig().debugPrintMessages)
+        {
+            PacketLogging.logPacket(packet, " id " + packetID + " larger than expected error detected, printing packet and buffer. Stacktrace gets logged after this");
 
-        final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
-        Connectivity.config.getCommonConfig().debugPrintMessages = true;
-        PacketLogging.logPacket(buffer.copy(buffer.readerIndex(), buffer.readableBytes()), " id " + packetID + " data of " + buffer.readableBytes() + " extra bytes: ");
-        Connectivity.config.getCommonConfig().debugPrintMessages = prev;
-
+            final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
+            Connectivity.config.getCommonConfig().debugPrintMessages = true;
+            PacketLogging.logPacket(buffer.copy(buffer.readerIndex(), buffer.readableBytes()), " id " + packetID + " data of " + buffer.readableBytes() + " extra bytes: ");
+            Connectivity.config.getCommonConfig().debugPrintMessages = prev;
+        }
         throw new IOException("Packet " + p_130535_.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get().getId() + "/" + packetID + " (" + packet.getClass().getSimpleName()
             + ") was larger than I expected, found " + friendlybytebuf.readableBytes() + " bytes extra whilst reading packet " + packetID);
     }

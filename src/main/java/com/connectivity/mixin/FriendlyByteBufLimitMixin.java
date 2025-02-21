@@ -16,7 +16,7 @@ public class FriendlyByteBufLimitMixin
     @Inject(method = "readNbt(Lnet/minecraft/nbt/NbtAccounter;)Lnet/minecraft/nbt/CompoundTag;", at = @At("HEAD"))
     private void releaseLimit(final NbtAccounter accounter, final CallbackInfoReturnable<CompoundTag> cir)
     {
-        if (Connectivity.config.getCommonConfig().disablePacketLimits)
+        if (Connectivity.config.getCommonConfig().disablePacketLimits && accounter instanceof IModifyAbleNbtAccounter)
         {
             ((IModifyAbleNbtAccounter) accounter).setQuota(Long.MAX_VALUE);
         }
@@ -25,7 +25,8 @@ public class FriendlyByteBufLimitMixin
     @Inject(method = "readNbt(Lnet/minecraft/nbt/NbtAccounter;)Lnet/minecraft/nbt/CompoundTag;", at = @At("RETURN"))
     private void checkLimit(final NbtAccounter accounter, final CallbackInfoReturnable<CompoundTag> cir)
     {
-        if (Connectivity.config.getCommonConfig().debugPrintMessages && accounter.getUsage() > ((IModifyAbleNbtAccounter) accounter).getOriginalQuota())
+        if (accounter instanceof IModifyAbleNbtAccounter && Connectivity.config.getCommonConfig().debugPrintMessages
+            && accounter.getUsage() > ((IModifyAbleNbtAccounter) accounter).getOriginalQuota())
         {
             Connectivity.LOGGER.warn("Received too large nbt tag:" + cir.getReturnValue(), new Exception("trace"));
         }
