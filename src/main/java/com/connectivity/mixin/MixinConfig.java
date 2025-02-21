@@ -20,6 +20,10 @@ public class MixinConfig implements IMixinConfigPlugin
     {
         System.getProperties().setProperty("forge.disablePacketCompressionDebug", "true");
         disabledMixins.put(basePath + "ClientBoundCustomPayloadPacketLMixin", () -> FMLLoader.getLoadingModList().getModFileById("xlpackets") != null);
+        disabledMixins.put(basePath + "compat.MinecoloniesPacketNameMixin", () -> FMLLoader.getLoadingModList().getModFileById("minecolonies") == null);
+        disabledMixins.put(basePath + "compat.MinecoloniesNetworkChannelMixin", () -> FMLLoader.getLoadingModList().getModFileById("minecolonies") == null);
+        disabledMixins.put(basePath + "compat.StructurizeNetworkChannelMixin", () -> FMLLoader.getLoadingModList().getModFileById("structurize") == null);
+        disabledMixins.put(basePath + "compat.StructurizePacketNameMixin", () -> FMLLoader.getLoadingModList().getModFileById("structurize") == null);
     }
 
     @Override
