@@ -36,7 +36,7 @@ public class PacketDecoderMixin<T extends PacketListener>
     {
         if (size > 8388608 && (Connectivity.config.getCommonConfig().debugPrintMessages || !Connectivity.config.getCommonConfig().disablePacketLimits))
         {
-            PacketLogging.logPacket(packet, " received is very large size:" + size + " bytes");
+            PacketLogging.logPacket(packet, " received is too big: " + size + " bytes");
         }
     }
 
@@ -44,11 +44,14 @@ public class PacketDecoderMixin<T extends PacketListener>
     private void onDecode(final ChannelHandlerContext p_130535_, final ByteBuf buffer, final List<Object> p_130537_, final CallbackInfo ci, int size, Packet packet)
         throws IOException
     {
-        PacketLogging.logPacket(packet, " id " + packet.type() + " larger than expected error detected, printing packet and buffer. Stacktrace gets logged after this");
-        final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
-        Connectivity.config.getCommonConfig().debugPrintMessages = true;
-        PacketLogging.logPacket(buffer.copy(buffer.readerIndex(), buffer.readableBytes()), " id " + packet.type() + " data of " + buffer.readableBytes() + " extra bytes: ");
-        Connectivity.config.getCommonConfig().debugPrintMessages = prev;
+        if (Connectivity.config.getCommonConfig().debugPrintMessages)
+        {
+            PacketLogging.logPacket(packet, " id " + packet.type() + " larger than expected error detected, printing packet and buffer. Stacktrace gets logged after this");
+            final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
+            Connectivity.config.getCommonConfig().debugPrintMessages = true;
+            PacketLogging.logPacket(buffer.copy(buffer.readerIndex(), buffer.readableBytes()), " id " + packet.type() + " data of " + buffer.readableBytes() + " extra bytes: ");
+            Connectivity.config.getCommonConfig().debugPrintMessages = prev;
+        }
 
         throw new IOException(
             "Packet "

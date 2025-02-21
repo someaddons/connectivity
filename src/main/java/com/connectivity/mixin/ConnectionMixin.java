@@ -6,6 +6,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.network.Connection;
+import net.minecraft.network.DisconnectionDetails;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
@@ -33,14 +34,17 @@ public abstract class ConnectionMixin
     @Shadow
     public abstract void disconnect(final Component p_129508_);
 
+    @Shadow
+    @Nullable
+    private DisconnectionDetails disconnectionDetails;
     @Unique
-    private int counter = 0;
+    private int                  counter = 0;
 
     @Inject(method = "exceptionCaught", at = @At("HEAD"))
     public void on(final ChannelHandlerContext context, final Throwable throwable, final CallbackInfo ci)
     {
         counter++;
-        if (Connectivity.config.getCommonConfig().debugPrintMessages)
+        if (Connectivity.config.getCommonConfig().debugPrintMessages && disconnectionDetails != null)
         {
             if (!(throwable instanceof ClosedChannelException))
             {
