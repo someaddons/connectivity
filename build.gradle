@@ -51,7 +51,6 @@ runs {
 
     server {
         systemProperty 'forge.enabledGameTestNamespaces', project.modid
-        programArgument '--nogui'
     }
 
     // This run config launches GameTestServer and runs all registered gametests, then exits.
