@@ -2,20 +2,17 @@ package com.connectivity.logging;
 
 import com.connectivity.Connectivity;
 import com.connectivity.networkstats.INamedPacket;
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import static com.google.gson.ReflectionAccessFilter.BLOCK_INACCESSIBLE_JAVA;
