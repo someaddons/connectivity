@@ -80,7 +80,7 @@ public class GsonErrorHandling implements TypeAdapterFactory
                 }
                 catch (Exception e)
                 {
-                    out.value("Error serializing:" + e.getLocalizedMessage());
+                    out.value("Error serializing:" + e.getLocalizedMessage() + " value:" + value);
                 }
             }
 

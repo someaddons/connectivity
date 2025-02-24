@@ -42,7 +42,7 @@ public abstract class ConnectionMixin
     public void on(final ChannelHandlerContext context, final Throwable throwable, final CallbackInfo ci)
     {
         counter++;
-        if (Connectivity.config.getCommonConfig().debugPrintMessages && disconnectedReason != null)
+        if (Connectivity.config.getCommonConfig().debugPrintMessages && disconnectedReason == null)
         {
             if (!(throwable instanceof ClosedChannelException))
             {
