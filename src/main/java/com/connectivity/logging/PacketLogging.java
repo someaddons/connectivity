@@ -30,8 +30,6 @@ public class PacketLogging
             .registerTypeHierarchyAdapter(EntityType.class, new EntityTypeHandler<>())
             .registerTypeHierarchyAdapter(BlockEntityType.class, new BlockEntityTypeHandler())
             .registerTypeHierarchyAdapter(ByteBuf.class, new ByteBufferTypeHandler<>())
-            .registerTypeHierarchyAdapter(FriendlyByteBuf.class, new FriendlyBufferTypeHandler<>())
-            .registerTypeHierarchyAdapter(Holder.Reference.class, new HolderReferenceTypeHandler<>())
             .registerTypeHierarchyAdapter(Holder.Reference.class, new HolderReferenceTypeHandler<>())
             .addSerializationExclusionStrategy(new ExclusionStrategy()
             {
