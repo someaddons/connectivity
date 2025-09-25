@@ -37,7 +37,7 @@ public class PacketDecoderMixin<T extends PacketListener>
         }
     }
 
-    @Inject(method = "decode", at = @At(value = "INVOKE", target = "Ljava/io/IOException;<init>(Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
+    @Inject(method = "decode", at = @At(value = "INVOKE", target = "Ljava/io/IOException;<init>(Ljava/lang/String;)V", ordinal = 1), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onDecode(
         final ChannelHandlerContext p_130535_,
         final ByteBuf buffer,
@@ -47,19 +47,12 @@ public class PacketDecoderMixin<T extends PacketListener>
         final FriendlyByteBuf friendlybytebuf,
         final int packetID,
         final Packet packet)
-        throws IOException
     {
         if (Connectivity.config.getCommonConfig().debugPrintMessages)
         {
             PacketLogging.logPacket(packet, " id " + packetID + " larger than expected error detected, printing packet and buffer. Stacktrace gets logged after this");
-
-            final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
-            Connectivity.config.getCommonConfig().debugPrintMessages = true;
             PacketLogging.logPacket(buffer.copy(buffer.readerIndex(), buffer.readableBytes()), " id " + packetID + " data of " + buffer.readableBytes() + " extra bytes: ");
-            Connectivity.config.getCommonConfig().debugPrintMessages = prev;
         }
-        throw new IOException("Packet " + p_130535_.channel().attr(Connection.ATTRIBUTE_PROTOCOL).get().getId() + "/" + packetID + " (" + packet.getClass().getSimpleName()
-            + ") was larger than I expected, found " + friendlybytebuf.readableBytes() + " bytes extra whilst reading packet " + packetID);
     }
 
     @Redirect(method = "decode", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ConnectionProtocol;createPacket(Lnet/minecraft/network/protocol/PacketFlow;ILnet/minecraft/network/FriendlyByteBuf;)Lnet/minecraft/network/protocol/Packet;"))
@@ -87,10 +80,7 @@ public class PacketDecoderMixin<T extends PacketListener>
 
                 Connectivity.LOGGER.warn("Decoding error for packet:" + name, t);
                 Connectivity.LOGGER.warn("<------ Packet Data Export: ------>");
-                final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
-                Connectivity.config.getCommonConfig().debugPrintMessages = true;
                 PacketLogging.logPacket(buf);
-                Connectivity.config.getCommonConfig().debugPrintMessages = prev;
                 Connectivity.LOGGER.warn("<------ Packet Data Export End: ------>");
                 buf.readerIndex(prevIndex);
             }
