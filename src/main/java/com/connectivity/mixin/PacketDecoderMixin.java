@@ -21,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.io.IOException;
 import java.util.List;
 
 @Mixin(PacketDecoder.class)
@@ -42,34 +41,18 @@ public class PacketDecoderMixin<T extends PacketListener>
 
     @Inject(method = "decode", at = @At(value = "INVOKE", target = "Ljava/io/IOException;<init>(Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onDecode(final ChannelHandlerContext p_130535_, final ByteBuf buffer, final List<Object> p_130537_, final CallbackInfo ci, int size, Packet packet)
-        throws IOException
     {
         if (Connectivity.config.getCommonConfig().debugPrintMessages)
         {
             PacketLogging.logPacket(packet, " id " + packet.type() + " larger than expected error detected, printing packet and buffer. Stacktrace gets logged after this");
-            final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
-            Connectivity.config.getCommonConfig().debugPrintMessages = true;
             PacketLogging.logPacket(buffer.copy(buffer.readerIndex(), buffer.readableBytes()), " id " + packet.type() + " data of " + buffer.readableBytes() + " extra bytes: ");
-            Connectivity.config.getCommonConfig().debugPrintMessages = prev;
         }
-
-        throw new IOException(
-            "Packet "
-                + this.protocolInfo.id().id()
-                + "/"
-                + packet.type()
-                + " ("
-                + packet.getClass().getSimpleName()
-                + ") was larger than I expected, found "
-                + buffer.readableBytes()
-                + " bytes extra whilst reading packet "
-                + packet.type()
-        );
     }
 
     @Redirect(method = "decode", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/codec/StreamCodec;decode(Ljava/lang/Object;)Ljava/lang/Object;"))
     private Object checkDecodingError(final StreamCodec instance, final Object o, ChannelHandlerContext p_130535_, ByteBuf buf, List<Object> result)
     {
+        int index = buf.readerIndex();
         try
         {
             return instance.decode(o);
@@ -78,8 +61,8 @@ public class PacketDecoderMixin<T extends PacketListener>
         {
             if (Connectivity.config.getCommonConfig().debugPrintMessages)
             {
-                int prevIndex = buf.readerIndex();
-                buf.resetReaderIndex();
+                int brokenIndex = buf.readerIndex();
+                buf.readerIndex(index);
                 int codecIndex = VarInt.read(buf);
 
                 String name = "unknown";
@@ -87,18 +70,15 @@ public class PacketDecoderMixin<T extends PacketListener>
                 {
                     if (implementation.codec() instanceof IdDispatchCodec<?, ?, ?> idDispatchCodec)
                     {
-                        name = protocolInfo.id().id() + "/" + idDispatchCodec.byId.get(codecIndex).type();
+                        name = protocolInfo.id().id() + "/" + (idDispatchCodec.byId.contains(codecIndex) ? idDispatchCodec.byId.get(codecIndex).type() : " unknown");
                     }
                 }
 
                 Connectivity.LOGGER.warn("Decoding error for packet:" + name, t);
                 Connectivity.LOGGER.warn("<------ Packet Data Export: ------>");
-                final boolean prev = Connectivity.config.getCommonConfig().debugPrintMessages;
-                Connectivity.config.getCommonConfig().debugPrintMessages = true;
                 PacketLogging.logPacket(buf);
-                Connectivity.config.getCommonConfig().debugPrintMessages = prev;
                 Connectivity.LOGGER.warn("<------ Packet Data Export End: ------>");
-                buf.readerIndex(prevIndex);
+                buf.readerIndex(brokenIndex);
             }
             throw t;
         }
