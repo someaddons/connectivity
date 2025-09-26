@@ -29,7 +29,7 @@ public abstract class ServerPlayNetHandlerMixin
 
     @Shadow
     @Final
-    private MinecraftServer server;
+    public MinecraftServer server;
 
     @ModifyConstant(method = "keepConnectionAlive", constant = @Constant(longValue = 15000L, ordinal = 0), require = 0, expect = 0)
     public long playTimeout(long old)

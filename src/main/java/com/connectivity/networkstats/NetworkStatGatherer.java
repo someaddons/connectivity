@@ -304,8 +304,7 @@ public class NetworkStatGatherer
         if (i + 1 < playerData.size())
         {
             source.sendSystemMessage(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
-              .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                String.format(NETWORKSTATS_PLAYER_SUMMARY_COMMAND, minutes, i)))));
+                .withClickEvent(new ClickEvent.RunCommand(String.format(NETWORKSTATS_PLAYER_SUMMARY_COMMAND, minutes, i)))));
         }
     }
 
@@ -351,8 +350,7 @@ public class NetworkStatGatherer
         if (i + 1 < data.size())
         {
             source.sendSystemMessage(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
-              .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                String.format(NETWORKSTATS_SUMMARY_COMMAND, minutes, i)))));
+                .withClickEvent(new ClickEvent.RunCommand(String.format(NETWORKSTATS_SUMMARY_COMMAND, minutes, i)))));
         }
     }
 
@@ -405,8 +403,7 @@ public class NetworkStatGatherer
         if (i + 1 < data.size())
         {
             source.sendSystemMessage(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
-              .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                String.format(NETWORKSTATS_SINGLE_PLAYER_COMMAND,
+                .withClickEvent(new ClickEvent.RunCommand(String.format(NETWORKSTATS_SINGLE_PLAYER_COMMAND,
                   playerEntity.getName().getString(),
                   minutes,
                   i)))));
@@ -459,8 +456,7 @@ public class NetworkStatGatherer
         if (i + 1 < data.size())
         {
             playerEntity.displayClientMessage(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
-              .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                String.format(NETWORKSTATS_CLIENT_FAKE_COMMAND, minutes, i)))), false);
+                .withClickEvent(new ClickEvent.RunCommand(String.format(NETWORKSTATS_CLIENT_FAKE_COMMAND, minutes, i)))), false);
         }
     }
 

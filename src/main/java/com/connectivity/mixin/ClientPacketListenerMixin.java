@@ -2,6 +2,7 @@ package com.connectivity.mixin;
 
 import com.connectivity.Connectivity;
 import com.connectivity.event.ClientEventHandler;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
@@ -45,8 +46,8 @@ public class ClientPacketListenerMixin
         ClientEventHandler.on(command);
     }
 
-    @Inject(method = "sendUnsignedCommand", at = @At("HEAD"))
-    private void onSendCommand(final String command, final CallbackInfoReturnable<Boolean> cir)
+    @Inject(method = "sendUnattendedCommand", at = @At("HEAD"))
+    private void onSendCommand(final String command, final Screen p_427225_, final CallbackInfo ci)
     {
         ClientEventHandler.on(command);
     }

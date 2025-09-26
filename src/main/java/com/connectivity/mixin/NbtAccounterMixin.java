@@ -9,7 +9,6 @@ public class NbtAccounterMixin implements IModifyAbleNbtAccounter
 {
     @Shadow
     @Mutable
-    @Final
     public long quota;
 
     @Unique
