@@ -27,7 +27,7 @@ public class ClientEventHandler
                 }
                 catch (Exception e)
                 {
-                    Minecraft.getInstance().player.sendSystemMessage(Component.literal("Excepted number of minutes as first parameter"));
+                    Minecraft.getInstance().player.displayClientMessage(Component.literal("Excepted number of minutes as first parameter"), false);
                     return;
                 }
 
@@ -39,7 +39,7 @@ public class ClientEventHandler
                     }
                     catch (Exception e)
                     {
-                        Minecraft.getInstance().player.sendSystemMessage(Component.literal("Excepted number of shown row as second parameter"));
+                        Minecraft.getInstance().player.displayClientMessage(Component.literal("Excepted number of shown row as second parameter"), false);
                         return;
                     }
                 }

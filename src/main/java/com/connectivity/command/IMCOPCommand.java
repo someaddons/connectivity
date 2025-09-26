@@ -30,7 +30,7 @@ public interface IMCOPCommand extends IMCCommand
 
         if (!IMCCommand.isPlayerOped((Player) sender))
         {
-            sender.sendSystemMessage(Component.literal("You need to be OP for this command."));
+            context.getSource().sendSystemMessage(Component.literal("You need to be OP for this command."));
             return false;
         }
         return true;
