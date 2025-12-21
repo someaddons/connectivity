@@ -2,6 +2,7 @@ package com.connectivity.mixin;
 
 import com.connectivity.Connectivity;
 import com.connectivity.logging.PacketLogging;
+import com.connectivity.networkstats.MalformedTrafficTracker;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.network.Connection;
@@ -41,6 +42,11 @@ public abstract class ConnectionMixin
     @Inject(method = "exceptionCaught", at = @At("HEAD"))
     public void on(final ChannelHandlerContext context, final Throwable throwable, final CallbackInfo ci)
     {
+        if (!(throwable instanceof ClosedChannelException))
+        {
+            MalformedTrafficTracker.recordError(context);
+        }
+
         counter++;
         if (Connectivity.config.getCommonConfig().debugPrintMessages && disconnectedReason == null)
         {
@@ -134,7 +140,7 @@ public abstract class ConnectionMixin
         }
     }
 
-    @Redirect(method = "disconnect", at = @At(value = "INVOKE", target = "Lio/netty/channel/ChannelFuture;awaitUninterruptibly()Lio/netty/channel/ChannelFuture;"))
+    @Redirect(method = "disconnect", at = @At(value = "INVOKE", target = "Lio/netty/channel/ChannelFuture;awaitUninterruptibly()Lio/netty/channel/ChannelFuture;", remap = false))
     private ChannelFuture onWait(final ChannelFuture instance)
     {
         try

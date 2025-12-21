@@ -28,6 +28,8 @@
     "compat.MinecoloniesPacketNameMixin",
     "compat.StructurizeNetworkChannelMixin",
     "compat.StructurizePacketNameMixin",
+    "malformedtraffic.ChannelHandler",
+    "malformedtraffic.PlayerLoginHook",
     "networkstats.CCustomPayloadLoginPacketNameMixin",
     "networkstats.CCustomPayloadPacketNameMixin",
     "networkstats.NettyPacketEncoderMixin",
