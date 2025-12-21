@@ -17,7 +17,7 @@ import java.util.List;
 @Mixin(CompressionEncoder.class)
 public class CompressionEncoderMixin
 {
-    @Shadow
+    @Shadow(remap = false)
     @Final
     @Mutable
     private static boolean DISABLE_PACKET_DEBUG;

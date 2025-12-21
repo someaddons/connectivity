@@ -1,18 +1,25 @@
 package com.connectivity.config;
 
 import com.cupboard.config.ICommonConfig;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class CommonConfiguration implements ICommonConfig
 {
-    public boolean disableLoginLimits                = true;
-    public boolean disablePacketLimits               = true;
-    public boolean debugPrintMessages                = false;
-    public boolean showFullResourceLocationException = false;
-    public boolean disableChatVerificationDisconnect = true;
-    public int     logintimeout                      = 120;
-    public int     packetHistoryMinutes              = 5;
-    public int     disconnectTimeout                 = 60;
+    public boolean     disableLoginLimits                = true;
+    public boolean     disablePacketLimits               = true;
+    public boolean     debugPrintMessages                = false;
+    public boolean     showFullResourceLocationException = false;
+    public boolean     disableChatVerificationDisconnect = true;
+    public int         logintimeout                      = 120;
+    public int         packetHistoryMinutes              = 5;
+    public int         disconnectTimeout                 = 60;
+    public Set<String> proxyWhitelist                    = new HashSet<>();
+    public boolean     enableMalformedTrafficDetection   = true;
 
     public CommonConfiguration()
     {
@@ -33,7 +40,8 @@ public class CommonConfiguration implements ICommonConfig
         root.add("disablePacketLimits", entry2);
 
         final JsonObject entry8 = new JsonObject();
-        entry8.addProperty("desc:", "(Clientside) Disables players disconnecting on chat message verification problems,(enable debugPrintMessages to see the message causing issues). default:true");
+        entry8.addProperty("desc:",
+            "(Clientside) Disables players disconnecting on chat message verification problems,(enable debugPrintMessages to see the message causing issues). default:true");
         entry8.addProperty("disableChatVerificationDisconnect", disableChatVerificationDisconnect);
         root.add("disableChatVerificationDisconnect", entry8);
 
@@ -57,6 +65,19 @@ public class CommonConfiguration implements ICommonConfig
         entry6.addProperty("packetHistoryMinutes", packetHistoryMinutes);
         root.add("packetHistoryMinutes", entry6);
 
+        final JsonObject entry9 = new JsonObject();
+        entry9.addProperty("desc:", "Detection and blocking of malformed and/or malicious traffic");
+        entry9.addProperty("enabled", enableMalformedTrafficDetection);
+        entry9.addProperty("proxies:",
+            "Add your proxy IP to the whitelist below, if you're using one(e.g. velocity) to avoid blocking the proxy's ip. Format: [\"127.0.0.1\", \"128.0.01\"] without the \\ ");
+        JsonArray proxyArray = new JsonArray();
+        for (final String proxy : proxyWhitelist)
+        {
+            proxyArray.add(proxy);
+        }
+        entry9.add("proxywhitelist", proxyArray);
+        root.add("malformedtraffic", entry9);
+
         final JsonObject entry7 = new JsonObject();
         entry7.addProperty("desc:", "Enable to see the full log output for all resource location exceptions. Default = false");
         entry7.addProperty("showFullResourceLocationException", showFullResourceLocationException);
@@ -75,5 +96,14 @@ public class CommonConfiguration implements ICommonConfig
         logintimeout = data.get("logintimeout").getAsJsonObject().get("logintimeout").getAsInt();
         disconnectTimeout = data.get("disconnectTimeout").getAsJsonObject().get("disconnectTimeout").getAsInt();
         packetHistoryMinutes = data.get("packetHistoryMinutes").getAsJsonObject().get("packetHistoryMinutes").getAsInt();
+
+        enableMalformedTrafficDetection = data.get("malformedtraffic").getAsJsonObject().get("enabled").getAsBoolean();
+        Set<String> loadedProxyWhitelist = new HashSet<>();
+        JsonArray proxyArray = data.get("malformedtraffic").getAsJsonObject().get("proxywhitelist").getAsJsonArray();
+        for (final JsonElement proxy : proxyArray)
+        {
+            loadedProxyWhitelist.add(proxy.getAsString());
+        }
+        proxyWhitelist = loadedProxyWhitelist;
     }
 }
