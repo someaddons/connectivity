@@ -26,6 +26,8 @@
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
     "networkstats.BundlePacketNameMixin",
+    "malformedtraffic.ChannelHandler",
+    "malformedtraffic.PlayerLoginHook",
     "networkstats.CCustomPayloadLoginPacketNameMixin",
     "networkstats.CCustomPayloadPacketNameMixin",
     "networkstats.NettyPacketEncoderMixin",
