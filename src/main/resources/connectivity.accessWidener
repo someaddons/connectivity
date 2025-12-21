@@ -4,3 +4,4 @@ accessible field net/minecraft/network/ConnectionProtocol$PacketSet classToId Li
 accessible field net/minecraft/network/Connection channel Lio/netty/channel/Channel;
 accessible field net/minecraft/nbt/NbtAccounter quota J
 mutable field net/minecraft/nbt/NbtAccounter quota J
+accessible field net/minecraft/server/network/ServerGamePacketListenerImpl connection Lnet/minecraft/network/Connection;

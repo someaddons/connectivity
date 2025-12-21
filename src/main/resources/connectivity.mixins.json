@@ -19,6 +19,8 @@
     "ResourceLocationExceptionMixin",
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
+    "malformedtraffic.ChannelHandler",
+    "malformedtraffic.PlayerLoginHook",
     "networkstats.CCustomPayloadLoginPacketNameMixin",
     "networkstats.CCustomPayloadPacketNameMixin",
     "networkstats.NettyPacketEncoderMixin",
