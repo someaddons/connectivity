@@ -19,7 +19,7 @@ public class MixinConfig implements IMixinConfigPlugin
     public void onLoad(final String mixinPackage)
     {
         System.getProperties().setProperty("forge.disablePacketCompressionDebug", "true");
-        disabledMixins.put(basePath + "ClientBoundCustomPayloadPacketLMixin", () -> FMLLoader.getLoadingModList().getModFileById("xlpackets") != null);
+        disabledMixins.put(basePath + "ClientBoundCustomPayloadPacketLMixin", () -> FMLLoader.getCurrent().getLoadingModList().getModFileById("xlpackets") != null);
     }
 
     @Override
