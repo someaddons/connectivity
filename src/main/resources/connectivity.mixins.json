@@ -24,6 +24,8 @@
     "ServerboundCustomQueryAnswerPacketMixin",
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",
+    "malformedtraffic.ChannelHandler",
+    "malformedtraffic.PlayerLoginHook",
     "networkstats.BundlePacketNameMixin",
     "networkstats.CCustomPayloadLoginPacketNameMixin",
     "networkstats.CCustomPayloadPacketNameMixin",
