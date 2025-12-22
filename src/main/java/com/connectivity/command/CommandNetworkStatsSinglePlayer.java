@@ -9,6 +9,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.GameProfileArgument;
+import net.minecraft.server.players.NameAndId;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +25,7 @@ public class CommandNetworkStatsSinglePlayer implements IMCOPCommand
     public int onExecute(final CommandContext<CommandSourceStack> context)
     {
         final CommandSourceStack source = context.getSource();
-        Collection<GameProfile> profiles = new ArrayList<>();
+        Collection<NameAndId> profiles = new ArrayList<>();
         try
         {
             profiles = GameProfileArgument.getGameProfiles(context, "player");
@@ -34,7 +35,7 @@ public class CommandNetworkStatsSinglePlayer implements IMCOPCommand
             Connectivity.LOGGER.warn("Player parameter error:", e);
         }
 
-        NetworkStatGatherer.reportPlayerSummary(source, context.getSource().getServer().getPlayerList().getPlayer(profiles.iterator().next().getId()), 5, 0);
+        NetworkStatGatherer.reportPlayerSummary(source, context.getSource().getServer().getPlayerList().getPlayer(profiles.iterator().next().id()), 5, 0);
         return 0;
     }
 
@@ -63,7 +64,7 @@ public class CommandNetworkStatsSinglePlayer implements IMCOPCommand
             return 0;
         }
 
-        Collection<GameProfile> profiles = new ArrayList<>();
+        Collection<NameAndId> profiles = new ArrayList<>();
         try
         {
             profiles = GameProfileArgument.getGameProfiles(context, "player");
@@ -74,7 +75,7 @@ public class CommandNetworkStatsSinglePlayer implements IMCOPCommand
         }
 
         NetworkStatGatherer.reportPlayerSummary(source,
-          context.getSource().getServer().getPlayerList().getPlayer(profiles.iterator().next().getId()),
+            context.getSource().getServer().getPlayerList().getPlayer(profiles.iterator().next().id()),
           IntegerArgumentType.getInteger(context, "minutes"),
           0);
 
@@ -89,7 +90,7 @@ public class CommandNetworkStatsSinglePlayer implements IMCOPCommand
             return 0;
         }
 
-        Collection<GameProfile> profiles = new ArrayList<>();
+        Collection<NameAndId> profiles = new ArrayList<>();
         try
         {
             profiles = GameProfileArgument.getGameProfiles(context, "player");
@@ -100,7 +101,7 @@ public class CommandNetworkStatsSinglePlayer implements IMCOPCommand
         }
 
         NetworkStatGatherer.reportPlayerSummary(source,
-          context.getSource().getServer().getPlayerList().getPlayer(profiles.iterator().next().getId()),
+            context.getSource().getServer().getPlayerList().getPlayer(profiles.iterator().next().id()),
           IntegerArgumentType.getInteger(context, "minutes"),
           IntegerArgumentType.getInteger(context, "index"));
 
