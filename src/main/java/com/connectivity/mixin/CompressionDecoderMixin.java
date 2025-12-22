@@ -2,6 +2,7 @@ package com.connectivity.mixin;
 
 import com.connectivity.Connectivity;
 import com.connectivity.logging.PacketLogging;
+import com.connectivity.networkstats.MalformedTrafficTracker;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -53,7 +54,7 @@ public abstract class CompressionDecoderMixin extends ByteToMessageDecoder
     }
 
     @Inject(method = "decode", at = @At(value = "INVOKE", target = "Lio/netty/handler/codec/DecoderException;<init>(Ljava/lang/String;)V"), remap = false)
-    private void onError(final ChannelHandlerContext p_129441_, final ByteBuf p_129442_, final List<Object> p_129443_, final CallbackInfo ci)
+    private void onError(final ChannelHandlerContext context, final ByteBuf p_129442_, final List<Object> p_129443_, final CallbackInfo ci)
     {
         printDebug(p_129443_);
     }
