@@ -13,7 +13,6 @@ public class CommonConfiguration implements ICommonConfig
     public boolean     disableLoginLimits                = true;
     public boolean     disablePacketLimits               = true;
     public boolean     debugPrintMessages                = false;
-    public boolean     showFullResourceLocationException = false;
     public boolean     disableChatVerificationDisconnect = true;
     public int         logintimeout                      = 120;
     public int         packetHistoryMinutes              = 5;
@@ -78,11 +77,6 @@ public class CommonConfiguration implements ICommonConfig
         entry9.add("proxywhitelist", proxyArray);
         root.add("malformedtraffic", entry9);
 
-        final JsonObject entry7 = new JsonObject();
-        entry7.addProperty("desc:", "Enable to see the full log output for all resource location exceptions. Default = false");
-        entry7.addProperty("showFullResourceLocationException", showFullResourceLocationException);
-        root.add("showFullResourceLocationException", entry7);
-
         return root;
     }
 
@@ -92,7 +86,6 @@ public class CommonConfiguration implements ICommonConfig
         disablePacketLimits = data.get("disablePacketLimits").getAsJsonObject().get("disablePacketLimits").getAsBoolean();
         debugPrintMessages = data.get("debugPrintMessages").getAsJsonObject().get("debugPrintMessages").getAsBoolean();
         disableChatVerificationDisconnect = data.get("disableChatVerificationDisconnect").getAsJsonObject().get("disableChatVerificationDisconnect").getAsBoolean();
-        showFullResourceLocationException = data.get("showFullResourceLocationException").getAsJsonObject().get("showFullResourceLocationException").getAsBoolean();
         logintimeout = data.get("logintimeout").getAsJsonObject().get("logintimeout").getAsInt();
         disconnectTimeout = data.get("disconnectTimeout").getAsJsonObject().get("disconnectTimeout").getAsInt();
         packetHistoryMinutes = data.get("packetHistoryMinutes").getAsJsonObject().get("packetHistoryMinutes").getAsInt();

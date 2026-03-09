@@ -7,6 +7,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
+import static net.minecraft.server.permissions.Permissions.COMMANDS_MODERATOR;
+
 /**
  * Interface for commands requiring OP rights to execute.
  */
@@ -18,7 +20,7 @@ public interface IMCOPCommand extends IMCCommand
     @Override
     default boolean checkPreCondition(final CommandContext<CommandSourceStack> context)
     {
-        if (context.getSource().hasPermission(OP_PERM_LEVEL))
+        if (context.getSource().permissions().hasPermission(COMMANDS_MODERATOR))
         {
             return true;
         }

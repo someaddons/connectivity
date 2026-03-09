@@ -20,7 +20,6 @@
     "PacketDecoderMixin",
     "PacketEncoderMixin",
     "PacketUtilsMixin",
-    "ResourceLocationExceptionMixin",
     "ServerboundCustomQueryAnswerPacketMixin",
     "ServerLoginNetHandlerMixin",
     "ServerPlayNetHandlerMixin",

@@ -9,6 +9,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
+import static net.minecraft.server.permissions.Permissions.COMMANDS_MODERATOR;
+
 /**
  * Interface for commands, uses Mojang's Brigadier command framework, @see <a href=https://github.com/Mojang/brigadier></a> .
  */
@@ -77,7 +79,7 @@ public interface IMCCommand
      */
     default boolean checkPreCondition(final CommandContext<CommandSourceStack> context)
     {
-        return context.getSource().getEntity() instanceof Player || context.getSource().hasPermission(OP_PERM_LEVEL);
+        return context.getSource().getEntity() instanceof Player || context.getSource().permissions().hasPermission(COMMANDS_MODERATOR);
     }
 
     /**
