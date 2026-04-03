@@ -428,7 +428,7 @@ public class NetworkStatGatherer
         final Style RED = Style.EMPTY.withBold(false).withColor(TextColor.fromLegacyFormat(ChatFormatting.RED));
         final Style GOLD = Style.EMPTY.withBold(true).withColor(TextColor.fromLegacyFormat(ChatFormatting.GOLD));
 
-        playerEntity.displayClientMessage(Component.literal("Network outgoing packet summary of last " + minutes + " minutes."), false);
+        playerEntity.sendSystemMessage(Component.literal("Network outgoing packet summary of last " + minutes + " minutes."));
 
         long totalBytes = 0;
         double totalRate = 0;
@@ -437,26 +437,25 @@ public class NetworkStatGatherer
             totalBytes += packetData.totalPacketBytes;
             totalRate += packetData.rate;
         }
-        playerEntity.displayClientMessage(Component.literal("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD),
-          false);
+        playerEntity.sendSystemMessage(Component.literal("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD));
 
         int i = 0;
         for (i = startIndex; i < startIndex + 5 && i < data.size(); i++)
         {
             final PacketData packetData = data.get(i);
-            playerEntity.displayClientMessage(
+            playerEntity.sendSystemMessage(
               Component.literal(percent.format(((double) (packetData.totalPacketBytes) / (totalBytes)) * 100) + "% ")
                 .append(Component.literal(packetData.packetName + " ")).setStyle(GREEN_BOLD)
                 .append(Component.literal("r: " + percent.format(packetData.rate) + "kb/s ").setStyle(BLUE))
                 .append(Component.literal("count:" + packetData.packetCount + " ").setStyle(YELLOW))
                 .append(Component.literal("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kb").setStyle(RED))
-              , false);
+            );
         }
 
         if (i + 1 < data.size())
         {
-            playerEntity.displayClientMessage(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
-                .withClickEvent(new ClickEvent.RunCommand(String.format(NETWORKSTATS_CLIENT_FAKE_COMMAND, minutes, i)))), false);
+            playerEntity.sendSystemMessage(Component.literal("next --->").setStyle(Style.EMPTY.withBold(true)
+                .withClickEvent(new ClickEvent.RunCommand(String.format(NETWORKSTATS_CLIENT_FAKE_COMMAND, minutes, i)))));
         }
     }
 
