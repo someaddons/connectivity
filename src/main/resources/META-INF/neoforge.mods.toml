@@ -50,14 +50,14 @@ versionRange = "[20,)" #mandatory
     modId="minecraft"
     mandatory=true
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
-versionRange = "[1.21,1.30)"
+versionRange = "[26,27)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.connectivity]]
     modId="cupboard"
     mandatory=true
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
-versionRange = "[1.21-1.4,)"
+versionRange = "[3.1,)"
     ordering="NONE"
     side="BOTH"
 [[mixins]]
