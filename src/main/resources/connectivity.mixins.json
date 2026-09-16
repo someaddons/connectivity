@@ -1,8 +1,6 @@
 {
   "required": false,
   "package": "com.connectivity.mixin",
-  "compatibilityLevel": "JAVA_21",
-  "refmap": "connectivity.refmap.json",
   "plugin": "com.connectivity.mixin.MixinConfig",
   "priority": 200,
   "mixins": [
