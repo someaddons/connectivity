@@ -28,7 +28,7 @@ public class ClientPacketListenerMixin
             }
             else
             {
-                message = playerChatMessage.unsignedContent();
+                message = playerChatMessage.unsignedContent().get();
             }
 
             Connectivity.LOGGER.warn("Failed chat message verification for: " + message.getString());

@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(ClientboundLevelChunkPacketData.class)
 public class ClientBoundLevelChunkPacketDataLimitMixin
 {
-    @ModifyConstant(method = "<init>(Lnet/minecraft/network/RegistryFriendlyByteBuf;II)V", constant = @Constant(intValue = 2097152), require = 0)
-    private int modifyLimit(final int constant)
+    @ModifyConstant(method = "<clinit>", constant = @Constant(intValue = 2097152), require = 0)
+    private static int modifyLimit(final int constant)
     {
         if (!Connectivity.config.getCommonConfig().disablePacketLimits)
         {
