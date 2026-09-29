@@ -296,8 +296,8 @@ public class NetworkStatGatherer
             source.sendSystemMessage(
               Component.literal(percent.format(((double) (playerPacketDataEntry.totalBytes) / (byteSum)) * 100) + "% ")
                 .append(Component.literal(playerPacketDataEntry.playerEntity.getName().getString() + " ")).setStyle(GREEN_BOLD)
-                .append(Component.literal("r: " + percent.format(playerPacketDataEntry.totalRate) + "kb/s ").setStyle(BLUE))
-                .append(Component.literal("total sent: " + percent.format((double) playerPacketDataEntry.totalBytes / 1000d) + "kb").setStyle(RED))
+                  .append(Component.literal("r: " + percent.format(playerPacketDataEntry.totalRate) + "kB/s ").setStyle(BLUE))
+                  .append(Component.literal("total sent: " + percent.format((double) playerPacketDataEntry.totalBytes / 1000d) + "kB").setStyle(RED))
               );
         }
 
@@ -332,7 +332,7 @@ public class NetworkStatGatherer
             totalBytes += packetData.totalPacketBytes;
             totalRate += packetData.rate;
         }
-        source.sendSystemMessage(Component.literal("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD));
+        source.sendSystemMessage(Component.literal("Total kB:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD));
 
         int i = 0;
         for (i = startIndex; i < startIndex + 5 && i < data.size(); i++)
@@ -341,9 +341,9 @@ public class NetworkStatGatherer
             source.sendSystemMessage(
               Component.literal(percent.format(((double) (packetData.totalPacketBytes) / (totalBytes)) * 100) + "% ")
                 .append(Component.literal(packetData.packetName + " ")).setStyle(GREEN_BOLD)
-                .append(Component.literal("r: " + percent.format(packetData.rate) + "kb/s ").setStyle(BLUE))
+                  .append(Component.literal("r: " + percent.format(packetData.rate) + "kB/s ").setStyle(BLUE))
                 .append(Component.literal("count:" + packetData.packetCount + " ").setStyle(YELLOW))
-                .append(Component.literal("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kb").setStyle(RED))
+                  .append(Component.literal("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kB").setStyle(RED))
               );
         }
 
@@ -385,7 +385,7 @@ public class NetworkStatGatherer
             totalBytes += packetData.totalPacketBytes;
             totalRate += packetData.rate;
         }
-        source.sendSystemMessage(Component.literal("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD));
+        source.sendSystemMessage(Component.literal("Total kB:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD));
 
         int i = 0;
         for (i = startIndex; i < startIndex + 5 && i < data.size(); i++)
@@ -394,9 +394,9 @@ public class NetworkStatGatherer
             source.sendSystemMessage(
               Component.literal(percent.format(((double) (packetData.totalPacketBytes) / (totalBytes)) * 100) + "% ")
                 .append(Component.literal(packetData.packetName + " ")).setStyle(GREEN_BOLD)
-                .append(Component.literal("r: " + percent.format(packetData.rate) + "kb/s ").setStyle(BLUE))
+                  .append(Component.literal("r: " + percent.format(packetData.rate) + "kB/s ").setStyle(BLUE))
                 .append(Component.literal("count:" + packetData.packetCount + " ").setStyle(YELLOW))
-                .append(Component.literal("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kb").setStyle(RED))
+                  .append(Component.literal("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kB").setStyle(RED))
               );
         }
 
@@ -437,7 +437,7 @@ public class NetworkStatGatherer
             totalBytes += packetData.totalPacketBytes;
             totalRate += packetData.rate;
         }
-        playerEntity.sendSystemMessage(Component.literal("Total kb:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD));
+        playerEntity.sendSystemMessage(Component.literal("Total kB:" + percent.format(totalBytes / 1000d) + " total rate:" + percent.format(totalRate)).setStyle(GOLD));
 
         int i = 0;
         for (i = startIndex; i < startIndex + 5 && i < data.size(); i++)
@@ -446,9 +446,9 @@ public class NetworkStatGatherer
             playerEntity.sendSystemMessage(
               Component.literal(percent.format(((double) (packetData.totalPacketBytes) / (totalBytes)) * 100) + "% ")
                 .append(Component.literal(packetData.packetName + " ")).setStyle(GREEN_BOLD)
-                .append(Component.literal("r: " + percent.format(packetData.rate) + "kb/s ").setStyle(BLUE))
+                  .append(Component.literal("r: " + percent.format(packetData.rate) + "kB/s ").setStyle(BLUE))
                 .append(Component.literal("count:" + packetData.packetCount + " ").setStyle(YELLOW))
-                .append(Component.literal("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kb").setStyle(RED))
+                  .append(Component.literal("maxSize: " + percent.format((double) packetData.maxPacketBytes / 1000d) + "kB").setStyle(RED))
             );
         }
 
@@ -488,9 +488,9 @@ public class NetworkStatGatherer
             {
                 source.sendSystemMessage(
                     Component.literal("Printed: "+ data.packetName + " ").setStyle(GREEN_BOLD)
-                    .append(Component.literal("r: " + percent.format(data.rate) + "kb/s ").setStyle(BLUE))
+                        .append(Component.literal("r: " + percent.format(data.rate) + "kB/s ").setStyle(BLUE))
                     .append(Component.literal("count:" + data.packetCount + " ").setStyle(YELLOW))
-                    .append(Component.literal("maxSize: " + percent.format((double) data.maxPacketBytes / 1000d) + "kb").setStyle(RED))
+                        .append(Component.literal("maxSize: " + percent.format((double) data.maxPacketBytes / 1000d) + "kB").setStyle(RED))
                 );
 
                 PacketLogging.logPacket(data.largestPacket,"Print triggered by command");
